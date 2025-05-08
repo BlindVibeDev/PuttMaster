@@ -18,6 +18,8 @@ import NotFound from '@/pages/not-found';
 // Audio setup
 import { useAudio } from '@/lib/stores/useAudio';
 
+import AuthCheck from './components/AuthCheck';
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
