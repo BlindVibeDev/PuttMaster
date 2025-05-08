@@ -52,22 +52,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.redirect(`https://replit.com/auth_with_repl_site?domain=${domain}&redirect=${redirect}`);
   });
 
-  app.get('/auth-callback', (req, res) => {
-    res.send(`
-      <html>
-      <body>
-        <script>
-          if (window.opener) {
-            window.opener.postMessage('auth_complete', '*');
-            window.close();
-          } else {
-            window.location.href = '/';
-          }
-        </script>
-        <p>Authentication complete. You can close this window.</p>
-      </body>
-      </html>
-    `);
+  app.get('/api/__replit/auth/callback', (req, res) => {
+    const redirectUrl = req.query.redirect || '/';
+    res.redirect(redirectUrl);
   });
 
   // === Game Endpoints ===
