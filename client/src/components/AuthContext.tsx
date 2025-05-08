@@ -1,8 +1,10 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
   id: string;
-  username: string;
+  name: string;
+  profileImage: string;
 }
 
 interface AuthContextType {
@@ -19,16 +21,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function getUser() {
       try {
-        const res = await fetch('/__replauthuser');
-
+        const res = await fetch('/__replauthuser', {
+          credentials: 'include'
+        });
+        
         if (!res.ok) {
           if (res.status === 401) {
+            // User is not authenticated
             setUser(null);
             return;
           }
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-
+        
         const userData = await res.json();
         if (userData?.id) {
           setUser(userData);
