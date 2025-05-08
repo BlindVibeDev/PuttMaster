@@ -54,8 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = () => {
-    // Use Replit's built-in auth system via API endpoint
-    window.location.href = `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.href)}`;
+    // Use Replit's built-in auth system
+    const replHost = window.location.host;
+    const redirectUrl = window.location.origin; // Redirect back to our app root
+    window.location.href = `https://replit.com/auth_with_repl_site?domain=${replHost}&redirect=${encodeURIComponent(redirectUrl)}`;
   };
 
   return (

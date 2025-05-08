@@ -55,8 +55,10 @@ export default function MainMenu() {
   
   // Handle login with Replit
   const handleReplitLogin = () => {
-    // Use the auth API endpoint directly
-    window.location.href = `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.href)}`;
+    // Direct auth with Replit
+    const replHost = window.location.host;
+    const redirectUrl = window.location.origin; // Redirect back to our app root
+    window.location.href = `https://replit.com/auth_with_repl_site?domain=${replHost}&redirect=${encodeURIComponent(redirectUrl)}`;
   };
   
   return (
