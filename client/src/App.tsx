@@ -11,6 +11,8 @@ import '@fontsource/inter';
 // Components
 import MainMenu from '@/components/MainMenu';
 import Lobby from '@/pages/Lobby';
+import Login from '@/pages/Login';
+import Signup from '@/pages/Signup';
 import GameView from '@/pages/GameView';
 import CreateGame from '@/pages/CreateGame';
 import PreGameLobby from '@/pages/PreGameLobby';
@@ -66,7 +68,13 @@ function App() {
             <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
               <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
-                  <Route path="/" element={<MainMenu />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/" element={
+                    <AuthCheck>
+                      <MainMenu />
+                    </AuthCheck>
+                  } />
                   <Route 
                     path="/lobby" 
                     element={
