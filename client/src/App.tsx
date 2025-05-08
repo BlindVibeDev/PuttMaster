@@ -62,24 +62,19 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <AuthProvider>
-          <BrowserRouter future={{ 
-            v7_relativeSplatPath: true,
-            v7_startTransition: true 
-          }}>
           <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<MainMenu />} />
-              <Route path="/lobby" element={<Lobby />} />
-              <Route path="/create-game" element={<CreateGame />} />
-              <Route path="/pregame/:id" element={<PreGameLobby />} />
-              <Route path="/game/:id" element={<GameView />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <Toaster position="top-right" />
-        </div>
-        </BrowserRouter>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Routes>
+                <Route path="/" element={<MainMenu />} />
+                <Route path="/lobby" element={<Lobby />} />
+                <Route path="/create-game" element={<CreateGame />} />
+                <Route path="/pregame/:id" element={<PreGameLobby />} />
+                <Route path="/game/:id" element={<GameView />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+            <Toaster position="top-right" />
+          </div>
         </AuthProvider>
       </HelmetProvider>
     </QueryClientProvider>
