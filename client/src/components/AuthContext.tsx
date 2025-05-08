@@ -15,13 +15,13 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { connected, connecting, select } = useWallet();
+  const { connected, connecting, publicKey } = useWallet();
 
   return (
     <AuthContext.Provider value={{ 
-      user: connected ? { connected: true } : null,
+      user: connected ? { connected: true, id: publicKey?.toString() } : null,
       loading: connecting,
-      login: () => select('phantom')
+      login: () => {} // Wallet button handles connection now
     }}>
       {children}
     </AuthContext.Provider>

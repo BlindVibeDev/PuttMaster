@@ -29,34 +29,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup Socket.io server
   setupSocketServer(httpServer);
 
-  // Replit Auth Routes
-  app.get('/api/__replit/auth/user', (req, res) => {
-    const userId = req.headers['x-replit-user-id'];
-    const userName = req.headers['x-replit-user-name'];
-    const profileImage = req.headers['x-replit-user-profile-image'];
-
-    if (!userId || !userName) {
-      return res.status(401).json(null);
-    }
-
-    res.json({
-      id: userId,
-      name: userName,
-      profileImage: profileImage || ''
-    });
-  });
-
-  app.get('/api/__replit/auth/login', (req, res) => {
-    const redirect = req.query.redirect || '/';
-    const domain = req.headers.host || '';
-    res.redirect(`https://replit.com/auth_with_repl_site?domain=${domain}&redirect=${redirect}`);
-  });
-
-  app.get('/api/__replit/auth/callback', (req, res) => {
-    const redirectUrl = req.query.redirect || '/';
-    res.redirect(redirectUrl);
-  });
-
   // === Game Endpoints ===
 
   // Get all active games

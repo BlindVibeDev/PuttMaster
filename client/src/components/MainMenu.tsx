@@ -96,11 +96,7 @@ export default function MainMenu() {
               <div className="flex flex-col gap-2 items-center mb-4">
                 <WalletButton />
                 
-                {!user && !loading && (
-                  <Button onClick={handleReplitLogin} variant="outline">
-                    Sign in with Replit
-                  </Button>
-                )}
+                
                 
                 {user && (
                   <p className="text-sm text-muted-foreground">
