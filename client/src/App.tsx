@@ -62,6 +62,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <AuthProvider>
+          <BrowserRouter future={{ 
+            v7_relativeSplatPath: true,
+            v7_startTransition: true 
+          }}>
           <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
@@ -75,6 +79,7 @@ function App() {
           </Suspense>
           <Toaster position="top-right" />
         </div>
+        </BrowserRouter>
         </AuthProvider>
       </HelmetProvider>
     </QueryClientProvider>

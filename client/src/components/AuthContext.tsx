@@ -21,14 +21,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function getUser() {
       try {
-        const res = await fetch('/__replauthuser');
-        const userData = await res.json();
+        const res = await fetch('/__replauthuser', {
+          credentials: 'include'
+        });
         
-        if (userData.id) {
+        if (!res.ok) {
+          if (res.status === 401) {
+            // User is not authenticated
+            setUser(null);
+            return;
+          }
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const userData = await res.json();
+        if (userData?.id) {
           setUser(userData);
         }
       } catch (error) {
         console.error('Failed to get user:', error);
+        setUser(null);
       } finally {
         setLoading(false);
       }
