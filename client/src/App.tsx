@@ -1,4 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
+import { AuthProvider } from './components/AuthContext';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
@@ -59,7 +60,8 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <SolanaProvider>
       <HelmetProvider>
-        <AuthCheck>
+        <AuthProvider>
+          <AuthCheck>
           <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
@@ -74,6 +76,7 @@ function App() {
           <Toaster position="top-right" />
         </div>
         </AuthCheck>
+        </AuthProvider>
       </HelmetProvider>
       </SolanaProvider>
     </QueryClientProvider>
