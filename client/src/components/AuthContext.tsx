@@ -1,5 +1,6 @@
+
 import { createContext, useContext, ReactNode } from 'react';
-import { usePrivy } from '@privy-io/react-auth';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 interface AuthContextType {
   user: any;
@@ -14,18 +15,13 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { 
-    ready,
-    authenticated,
-    user,
-    login
-  } = usePrivy();
+  const { connected, connecting, select } = useWallet();
 
   return (
     <AuthContext.Provider value={{ 
-      user: authenticated ? user : null, 
-      loading: !ready,
-      login 
+      user: connected ? { connected: true } : null,
+      loading: connecting,
+      login: () => select('phantom')
     }}>
       {children}
     </AuthContext.Provider>
