@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface User {
@@ -21,7 +20,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async function getUser() {
       try {
         const res = await fetch('/__replauthuser');
-        
+
         if (!res.ok) {
           if (res.status === 401) {
             setUser(null);
@@ -29,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-        
+
         const userData = await res.json();
         if (userData?.id) {
           setUser(userData);
