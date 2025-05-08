@@ -1,5 +1,7 @@
+
 import { ReactNode } from 'react';
 import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthCheckProps {
   children: ReactNode;
@@ -7,6 +9,7 @@ interface AuthCheckProps {
 
 export default function AuthCheck({ children }: AuthCheckProps) {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
