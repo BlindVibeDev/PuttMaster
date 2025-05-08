@@ -32,11 +32,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       
       if (!res.ok) {
-        if (res.status === 401) {
-          setUser(null);
-          return;
-        }
-        throw new Error(`HTTP error! status: ${res.status}`);
+        setUser(null);
+        return;
       }
       
       const data = await res.json();
@@ -54,10 +51,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = () => {
-    // Use Replit's built-in auth system
-    const replHost = window.location.host;
-    const redirectUrl = window.location.origin; // Redirect back to our app root
-    window.location.href = `https://replit.com/auth_with_repl_site?domain=${replHost}&redirect=${encodeURIComponent(redirectUrl)}`;
+    const width = 350;
+    const height = 500;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+
+    const authWindow = window.open(
+      `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.origin + '/auth-callback')}`,
+      '_blank',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+
+    window.addEventListener('message', function authComplete(e) {
+      if (e.data !== 'auth_complete') return;
+      window.removeEventListener('message', authComplete);
+      authWindow?.close();
+      checkUser();
+    });
   };
 
   return (
