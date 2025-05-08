@@ -33,7 +33,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/__replit/auth/user', (req, res) => {
     res.json(req.headers['x-replit-user-id'] ? {
       id: req.headers['x-replit-user-id'],
-      name: req.headers['x-replit-user-name']
+      name: req.headers['x-replit-user-name'],
+      profileImage: req.headers['x-replit-user-profile-image'] || ''
     } : null);
   });
 

@@ -54,25 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = () => {
-    const width = 350;
-    const height = 500;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
-
-    const authWindow = window.open(
-      `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.href)}`,
-      '_blank',
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
-
-    window.addEventListener('message', function authComplete(e) {
-      if (e.data !== 'auth_complete') return;
-      
-      window.removeEventListener('message', authComplete);
-      authWindow?.close();
-      checkUser();
-      navigate('/');
-    });
+    // Use Replit's built-in auth system
+    window.location.href = '/__replauthlogin';
   };
 
   return (
