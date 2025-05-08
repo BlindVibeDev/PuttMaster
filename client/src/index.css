@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 180 20% 99%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142 71% 45%;
+    --radius: 0.5rem;
+    
+    /* Chart colors for scoreboards */
+    --chart-1: 224 71.4% 45.3%;
+    --chart-2: 262 83.3% 57.8%;
+    --chart-3: 316 70% 43.5%;
+    --chart-4: 0 72.2% 50.6%;
+    --chart-5: 20 84.3% 50.3%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 142 70% 50%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142 70% 50%;
+    
+    /* Chart colors for scoreboards */
+    --chart-1: 224 85% 66%;
+    --chart-2: 262 83.3% 67.8%;
+    --chart-3: 316 70% 53.5%;
+    --chart-4: 0 72.2% 60.6%;
+    --chart-5: 20 84.3% 60.3%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+
+.power-meter {
+  width: 200px;
+  height: 20px;
+  border: 2px solid white;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.power-meter-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, green, yellow, red);
+  transition: width 0.1s ease;
+}
+
+.aiming-line {
+  position: absolute;
+  height: 5px;
+  transform-origin: center left;
+  background: white;
+  opacity: 0.8;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.score-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.player-turn-indicator {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  display: inline-block;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+.game-lobby {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.customization-panel {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.golf-button {
+  background: linear-gradient(to bottom, var(--primary), hsl(var(--primary) / 0.9));
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.golf-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.golf-button:active {
+  transform: translateY(0);
+}
+
+.hole-complete-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 100;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
