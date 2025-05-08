@@ -1,36 +1,28 @@
 
 import { ReactNode } from 'react';
 import { useAuth } from './AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 interface AuthCheckProps {
   children: ReactNode;
 }
 
 export default function AuthCheck({ children }: AuthCheckProps) {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user, loading, login } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-2xl">Loading...</div>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl">Please log in to continue</h1>
-        <button
-          onClick={() => {
-            window.location.href = '/__replauthlogin';
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Login with Replit
-        </button>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-bold">Please sign in to continue</h1>
+        <Button onClick={login}>Sign in with Replit</Button>
       </div>
     );
   }
