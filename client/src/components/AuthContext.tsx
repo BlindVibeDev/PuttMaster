@@ -27,7 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkUser = async () => {
     try {
-      const res = await fetch('/__replauthuser', {
+      const res = await fetch('/api/__replit/auth/user', {
         credentials: 'include'
       });
       
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const top = window.screen.height / 2 - height / 2;
 
     const authWindow = window.open(
-      `https://replit.com/auth_with_repl_site?domain=${location.host}`,
+      `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.href)}`,
       '_blank',
       `width=${width},height=${height},top=${top},left=${left}`
     );

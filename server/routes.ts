@@ -28,6 +28,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Setup Socket.io server
   setupSocketServer(httpServer);
+
+  // Replit Auth Routes
+  app.get('/api/__replit/auth/user', (req, res) => {
+    res.json(req.headers['x-replit-user-id'] ? {
+      id: req.headers['x-replit-user-id'],
+      name: req.headers['x-replit-user-name']
+    } : null);
+  });
+
+  app.get('/api/__replit/auth/login', (req, res) => {
+    const redirect = req.query.redirect || '/';
+    res.redirect(`https://replit.com/auth_with_repl_site?domain=${req.headers.host}&redirect=${redirect}`);
+  });
   
   // === Game Endpoints ===
   
