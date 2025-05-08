@@ -26,14 +26,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     >
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <SolanaProvider>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          </SolanaProvider>
-        </HelmetProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
+          <HelmetProvider>
+            <SolanaProvider>
+              <AuthProvider>
+                <App />
+              </AuthProvider>
+            </SolanaProvider>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    </PrivyProvider>
   </React.StrictMode>
 );
