@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { Sphere } from '@react-three/drei';
 import { useGameState } from '../hooks/useGameState';
+import { useAudio } from '@/lib/stores/useAudio';
 
 const BALL_RADIUS = 0.1;
 const FRICTION = 0.95;
@@ -171,5 +172,3 @@ export default function Ball({
     </Sphere>
   );
 }
-
-import { useAudio } from '@/lib/stores/useAudio';
