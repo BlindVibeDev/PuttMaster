@@ -57,7 +57,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+        <AuthCheck>
+          <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route path="/" element={<MainMenu />} />
@@ -70,6 +71,7 @@ function App() {
           </Suspense>
           <Toaster position="top-right" />
         </div>
+        </AuthCheck>
       </HelmetProvider>
     </QueryClientProvider>
   );
