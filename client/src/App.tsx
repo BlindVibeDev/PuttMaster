@@ -20,6 +20,7 @@ import { useAudio } from '@/lib/stores/useAudio';
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const [walletConnected, setWalletConnected] = useState(false);
   
   // Initialize audio
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
   
   return (
     <QueryClientProvider client={queryClient}>
+      <SolanaProvider>
       <HelmetProvider>
         <AuthCheck>
           <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -73,6 +75,7 @@ function App() {
         </div>
         </AuthCheck>
       </HelmetProvider>
+      </SolanaProvider>
     </QueryClientProvider>
   );
 }
