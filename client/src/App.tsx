@@ -58,10 +58,8 @@ function App() {
   
   return (
     <QueryClientProvider client={queryClient}>
-      <SolanaProvider>
       <HelmetProvider>
         <AuthProvider>
-          <AuthCheck>
           <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
@@ -75,10 +73,8 @@ function App() {
           </Suspense>
           <Toaster position="top-right" />
         </div>
-        </AuthCheck>
         </AuthProvider>
       </HelmetProvider>
-      </SolanaProvider>
     </QueryClientProvider>
   );
 }
