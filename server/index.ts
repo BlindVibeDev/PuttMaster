@@ -8,6 +8,18 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Add Repl Auth middleware
+app.use((req, res, next) => {
+  const userId = req.headers['x-replit-user-id'];
+  const username = req.headers['x-replit-user-name'];
+  
+  if (userId && username) {
+    req.user = { id: userId, username };
+  }
+  
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

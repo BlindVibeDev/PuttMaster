@@ -3,8 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 
 interface User {
   id: string;
-  name: string;
-  profileImage: string;
+  username: string;
 }
 
 interface AuthContextType {
@@ -21,13 +20,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function getUser() {
       try {
-        const res = await fetch('/__replauthuser', {
-          credentials: 'include'
-        });
+        const res = await fetch('/__replauthuser');
         
         if (!res.ok) {
           if (res.status === 401) {
-            // User is not authenticated
             setUser(null);
             return;
           }
