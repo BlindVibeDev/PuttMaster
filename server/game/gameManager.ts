@@ -311,7 +311,7 @@ class GameManager {
     player.score[game.currentHole] = player.strokes;
     
     // Save score to database
-    await updatePlayerScore(game.id, player.userId, game.currentHole, player.strokes);
+    await storage.updatePlayerScore(game.id, player.userId, game.currentHole, player.strokes);
     
     // If all players have finished the hole, get ready for the next hole
     const allFinished = await this.haveAllPlayersFinishedHole(gameId);
@@ -376,7 +376,7 @@ class GameManager {
     if (game.currentHole >= 8) {
       // Game is finished
       game.status = 'finished';
-      await updateGameStatus(gameId, 'finished');
+      await storage.updateGameStatus(gameId, 'finished');
       return;
     }
     
