@@ -38,9 +38,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } : null);
   });
 
-  app.get('/api/__replit/auth/login', (req, res) => {
+  // Handle both API and direct route paths for login
+  app.get(['/api/__replit/auth/login', '/__replit/auth/login'], (req, res) => {
     const redirect = req.query.redirect || '/';
     res.redirect(`https://replit.com/auth_with_repl_site?domain=${req.headers.host}&redirect=${redirect}`);
+  });
+  
+  // Handle auth callback
+  app.get('/auth-callback', (req, res) => {
+    // Send a message to the opener window (if any)
+    res.send(`
+      <html>
+      <body>
+        <script>
+          window.opener && window.opener.postMessage('auth_complete', '*');
+          if (!window.opener) {
+            window.location.href = '/';
+          }
+        </script>
+        Authentication complete. You can close this window.
+      </body>
+      </html>
+    `);
   });
   
   // === Game Endpoints ===

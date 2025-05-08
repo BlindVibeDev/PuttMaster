@@ -55,7 +55,8 @@ export default function MainMenu() {
   
   // Handle login with Replit
   const handleReplitLogin = () => {
-    window.location.href = '/__replauthlogin';
+    // Use the auth API endpoint directly
+    window.location.href = `/api/__replit/auth/login?redirect=${encodeURIComponent(window.location.href)}`;
   };
   
   return (
