@@ -1,0 +1,70 @@
+Wallet Adapter Packages
+This library is organized into small packages with few dependencies.
+
+To add it to your app, you'll need core packages, some wallets, and UI components for your chosen framework.
+
+Core
+These packages are what most projects can use to support wallets on Solana.
+
+package	description	npm
+base	Adapter interfaces, error types, and common utilities	@solana/wallet-adapter-base
+react	Contexts and hooks for React apps	@solana/wallet-adapter-react
+Community
+Several core packages are maintained by the community to support additional frontend frameworks.
+
+Vue
+Angular
+Svelte
+TypeScript
+Ant Design Web3
+UI Components
+These packages provide components for common UI frameworks.
+
+package	description	npm
+react-ui	Components for React (no UI framework, just CSS)	@solana/wallet-adapter-react-ui
+Wallets
+These packages provide adapters for each wallet. You can use the wallets package, or add the individual wallet packages you want.
+
+package	description	npm
+wallets	Includes all the wallets (with tree shaking)	@solana/wallet-adapter-wallets
+alpha	Adapter for Alpha	@solana/wallet-adapter-alpha
+avana	Adapter for Avana	@solana/wallet-adapter-avana
+bitkeep	Adapter for BitKeep	@solana/wallet-adapter-bitkeep
+bitpie	Adapter for Bitpie	@solana/wallet-adapter-bitpie
+clover	Adapter for CLV	@solana/wallet-adapter-clover
+coin98	Adapter for Coin98	@solana/wallet-adapter-coin98
+coinbase	Adapter for Coinbase	@solana/wallet-adapter-coinbase
+coinhub	Adapter for Coinhub	@solana/wallet-adapter-coinhub
+fractal	Adapter for Fractal	@solana/wallet-adapter-fractal
+huobi	Adapter for HuobiWallet	@solana/wallet-adapter-huobi
+hyperpay	Adapter for HyperPay	@solana/wallet-adapter-hyperpay
+keystone	Adapter for keystone	@solana/wallet-adapter-keystone
+krystal	Adapter for krystal	@solana/wallet-adapter-krystal
+ledger	Adapter for Ledger	@solana/wallet-adapter-ledger
+mathwallet	Adapter for MathWallet	@solana/wallet-adapter-mathwallet
+neko	Adapter for Neko	@solana/wallet-adapter-neko
+nightly	Adapter for Nightly	@solana/wallet-adapter-nightly
+nufi	Adapter for NuFi	@solana/wallet-adapter-nufi
+onto	Adapter for ONTO	@solana/wallet-adapter-onto
+particle	Adapter for Particle	@solana/wallet-adapter-particle
+phantom	Adapter for Phantom	@solana/wallet-adapter-phantom
+safepal	Adapter for SafePal	@solana/wallet-adapter-safepal
+saifu	Adapter for Saifu	@solana/wallet-adapter-saifu
+salmon	Adapter for Salmon	@solana/wallet-adapter-salmon
+sky	Adapter for Sky	@solana/wallet-adapter-sky
+solflare	Adapter for Solflare	@solana/wallet-adapter-solflare
+solong	Adapter for Solong	@solana/wallet-adapter-solong
+spot	Adapter for Spot	@solana/wallet-adapter-spot
+tokenary	Adapter for Tokenary	@solana/wallet-adapter-tokenary
+tokenpocket	Adapter for TokenPocket	@solana/wallet-adapter-tokenpocket
+torus	Adapter for Torus	@solana/wallet-adapter-torus
+trezor	Adapter for Trezor	@solana/wallet-adapter-trezor
+trust	Adapter for Trust Wallet	@solana/wallet-adapter-trust
+walletconnect	Adapter for WalletConnect	@solana/wallet-adapter-walletconnect
+xdefi	Adapter for XDEFI	@solana/wallet-adapter-xdefi
+Starter Projects
+These packages provide projects that you can use to start building a app with built-in wallet support.
+
+package	description	npm
+example	Demo of UI components and wallets	@solana/wallet-adapter-example
+react-ui-starter	Parcel project using React UI	@solana/wallet-adapter-react-ui-starter
