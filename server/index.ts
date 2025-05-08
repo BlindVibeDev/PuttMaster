@@ -1,7 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { authMiddleware } from "@replit/repl-auth";
+import ReplitAuth from "@replit/repl-auth";
+const authMiddleware = ReplitAuth.middleware();
 import Database from "@replit/database";
 
 export const db = new Database();
