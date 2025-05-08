@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -10,6 +11,9 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { useLobby } from '@/lib/stores/useLobby';
 import { useAudio } from '@/lib/stores/useAudio';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useAuth } from '@/components/AuthContext';
+import { WalletButton } from '@/components/WalletButton';
 
 export default function MainMenu() {
   const navigate = useNavigate();
@@ -17,6 +21,8 @@ export default function MainMenu() {
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [newUsername, setNewUsername] = useState(username);
   const [showCredits, setShowCredits] = useState(false);
+  const { connected } = useWallet();
+  const { user, loading } = useAuth();
   
   // Start background music
   useEffect(() => {
@@ -36,31 +42,20 @@ export default function MainMenu() {
   
   // Handle play button click
   const handlePlay = () => {
+    if (!connected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+    if (!user) {
+      toast.error('Please sign in with Replit first');
+      return;
+    }
     navigate('/lobby');
   };
   
-  // Handle username change
-  const handleChangeUsername = () => {
-    if (newUsername.trim()) {
-      updateUsername(newUsername.trim());
-      setShowNameDialog(false);
-      toast.success(`Username updated to ${newUsername}`);
-    } else {
-      toast.error('Username cannot be empty');
-    }
-  };
-  
-  // Toggle mute
-  const toggleMute = () => {
-    const { toggleMute, isMuted, backgroundMusic } = useAudio.getState();
-    toggleMute();
-    
-    if (isMuted && backgroundMusic) {
-      // If we're unmuting, try to play the music
-      backgroundMusic.play().catch(err => {
-        console.log('Auto-play prevented. User must interact first.', err);
-      });
-    }
+  // Handle login with Replit
+  const handleReplitLogin = () => {
+    window.location.href = '/__replauthlogin';
   };
   
   return (
@@ -94,6 +89,23 @@ export default function MainMenu() {
         <Card className="w-full max-w-md bg-white/90 backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col gap-4">
+              {/* Auth Status Section */}
+              <div className="flex flex-col gap-2 items-center mb-4">
+                <WalletButton />
+                
+                {!user && !loading && (
+                  <Button onClick={handleReplitLogin} variant="outline">
+                    Sign in with Replit
+                  </Button>
+                )}
+                
+                {user && (
+                  <p className="text-sm text-muted-foreground">
+                    Signed in as {user.name}
+                  </p>
+                )}
+              </div>
+
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -102,6 +114,7 @@ export default function MainMenu() {
                 <Button 
                   onClick={handlePlay} 
                   className="w-full py-6 text-xl font-bold"
+                  disabled={!connected || !user}
                 >
                   Play Now
                 </Button>
@@ -116,6 +129,7 @@ export default function MainMenu() {
                   onClick={() => setShowNameDialog(true)} 
                   variant="outline" 
                   className="w-full"
+                  disabled={!user}
                 >
                   Change Username
                 </Button>
@@ -130,6 +144,7 @@ export default function MainMenu() {
                   onClick={() => navigate('/customize')} 
                   variant="outline" 
                   className="w-full"
+                  disabled={!user}
                 >
                   Customize
                 </Button>
@@ -157,7 +172,7 @@ export default function MainMenu() {
                 className="flex justify-center mt-4"
               >
                 <Button 
-                  onClick={toggleMute} 
+                  onClick={() => useAudio.getState().toggleMute()} 
                   variant="ghost" 
                   size="sm"
                   className="flex items-center gap-2"
@@ -169,10 +184,6 @@ export default function MainMenu() {
                   )}
                 </Button>
               </motion.div>
-            </div>
-            
-            <div className="mt-8 text-center text-sm text-muted-foreground">
-              <p>Playing as: <span className="font-semibold">{username}</span></p>
             </div>
           </CardContent>
         </Card>
@@ -197,7 +208,15 @@ export default function MainMenu() {
               <Button variant="outline" onClick={() => setShowNameDialog(false)}>
                 Cancel
               </Button>
-              <Button onClick={handleChangeUsername}>
+              <Button onClick={() => {
+                if (newUsername.trim()) {
+                  updateUsername(newUsername.trim());
+                  setShowNameDialog(false);
+                  toast.success(`Username updated to ${newUsername}`);
+                } else {
+                  toast.error('Username cannot be empty');
+                }
+              }}>
                 Save Changes
               </Button>
             </DialogFooter>
@@ -224,6 +243,7 @@ export default function MainMenu() {
                   <li>Express</li>
                   <li>Socket.io</li>
                   <li>Tailwind CSS</li>
+                  <li>Solana Web3.js</li>
                 </ul>
               </div>
               
