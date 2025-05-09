@@ -21,7 +21,7 @@ export default function MainMenu() {
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [newUsername, setNewUsername] = useState(username);
   const [showCredits, setShowCredits] = useState(false);
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const { user, loading } = useAuth();
   
   // Start background music
