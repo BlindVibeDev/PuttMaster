@@ -21,7 +21,7 @@ export default function MainMenu() {
   const [newUsername, setNewUsername] = useState(username);
   const [showCredits, setShowCredits] = useState(false);
   const { publicKey, connected } = useWallet();
-  const { user, loading } = useAuth();
+  const { user, loading, login } = useAuth();
 
   // Start background music
   useEffect(() => {
@@ -54,13 +54,13 @@ export default function MainMenu() {
 
   // Handle login with Replit
   const handleReplitLogin = () => {
-    // Use our auth context login method
     try {
       console.log("Initiating Replit login");
       if (loading) {
         toast.info("Authentication is in progress...");
         return;
       }
+      
       login();
     } catch (error) {
       console.error("Login error:", error);
@@ -121,9 +121,9 @@ export default function MainMenu() {
                 {/* Wallet Button */}
                 <WalletButton className="w-full py-4 text-lg" />
 
-                {connected && (
+                {connected && publicKey && (
                   <p className="text-sm text-muted-foreground">
-                    Wallet Connected: {publicKey?.toString().slice(0, 8)}...
+                    Wallet Connected: {publicKey.toString().slice(0, 8)}...
                   </p>
                 )}
               </div>
@@ -136,7 +136,7 @@ export default function MainMenu() {
                 <Button 
                   onClick={handlePlay} 
                   className="w-full py-6 text-xl font-bold"
-                  disabled={!connected}
+                  disabled={!connected || !user}
                 >
                   Play Now
                 </Button>
