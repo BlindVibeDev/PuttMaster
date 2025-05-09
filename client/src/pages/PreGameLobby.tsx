@@ -185,9 +185,15 @@ export default function PreGameLobby() {
     // Handle game starting
     newSocket.on('game:starting', () => {
       toast.success('All players ready! Starting game...');
+      
+      // Important: Disconnect socket before navigating
+      newSocket.disconnect();
+      
+      // Use a timeout to ensure the socket is properly disconnected
       setTimeout(() => {
+        console.log('PreGameLobby: Socket disconnected, navigating to game');
         navigate(`/game/${gameId}`);
-      }, 2000);
+      }, 1000);
     });
     
     // Handle errors from server
