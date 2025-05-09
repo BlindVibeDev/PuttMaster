@@ -54,10 +54,18 @@ export default function MainMenu() {
 
   // Handle login with Replit
   const handleReplitLogin = () => {
-    // Direct auth with Replit
-    const replHost = window.location.host;
-    const redirectUrl = window.location.origin; // Redirect back to our app root
-    window.location.href = `https://replit.com/auth_with_repl_site?domain=${replHost}&redirect=${encodeURIComponent(redirectUrl)}`;
+    // Use our auth context login method
+    try {
+      console.log("Initiating Replit login");
+      if (loading) {
+        toast.info("Authentication is in progress...");
+        return;
+      }
+      login();
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Failed to login with Replit");
+    }
   };
 
   return (

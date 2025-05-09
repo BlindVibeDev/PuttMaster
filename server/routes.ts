@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupSocketServer } from "./socket";
@@ -9,6 +9,7 @@ import {
   insertPlayerCustomizationSchema,
   GameMode
 } from "@shared/schema";
+import { getUserInfo } from "@replit/repl-auth";
 
 // Validation schemas
 const createGameSchema = z.object({
@@ -242,6 +243,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Error with user:', error);
       res.status(500).json({ message: 'Failed to process user' });
     }
+  });
+
+  // === Auth Endpoints ===
+
+  // Get current authenticated user
+  app.get('/api/auth/user', (req, res) => {
+    try {
+      // Get authenticated user from Replit Auth
+      const user = getUserInfo(req);
+      
+      // If no user is authenticated
+      if (!user || !user.id) {
+        return res.status(200).json(null);
+      }
+      
+      // Return user info
+      return res.status(200).json({
+        id: user.id,
+        name: user.name,
+        username: user.name, // Replit auth provides 'name' which we'll use as username
+        bio: '',
+        isLoggedIn: true,
+        roles: [],
+        profileImage: user.profileImage || ''
+      });
+    } catch (error) {
+      console.error('Error getting authenticated user:', error);
+      return res.status(200).json(null); // Return null instead of error to simplify client logic
+    }
+  });
+  
+  // Logout endpoint (Not used directly - Replit Auth doesn't have a formal logout method)
+  app.post('/api/auth/logout', (req, res) => {
+    res.status(200).json({ message: 'Logged out' });
   });
 
   // === Player Customization Endpoints ===
