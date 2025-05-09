@@ -36,6 +36,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all active games
   app.get('/api/games', async (req, res) => {
     try {
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
+      
       const games = await storage.getActiveGames();
       res.json(games);
     } catch (error) {
