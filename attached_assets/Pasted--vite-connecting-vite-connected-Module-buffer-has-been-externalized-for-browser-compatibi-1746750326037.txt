@@ -1,0 +1,17 @@
+[vite] connecting...
+[vite] connected.
+Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+You have tried to read "publicKey" on a WalletContext without providing one. Make sure to render a WalletProvider as an ancestor of the component that uses WalletContext.
+at logMissingProviderError (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react.js?v=a963fad4:23568:17)
+at Object.get (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react.js?v=a963fad4:23563:5)
+at MainMenu (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/MainMenu.tsx:40:22)
+at renderWithHooks (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:11548:26)
+at mountIndeterminateComponent (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:14926:21)
+at beginWork (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:15914:22)
+at beginWork$1 (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:19753:22)
+at performUnitOfWork (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:19198:20)
+at workLoopSync (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:19137:13)
+at renderRootSync (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-276SZO74.js?v=7a9f7282:19116:15)
+You have tried to read "publicKey" on a WalletContext without providing one. Make sure to render a WalletProvider as an ancestor of the component that uses WalletContext.
