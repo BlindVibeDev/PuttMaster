@@ -112,14 +112,26 @@ export const useCustomization = create<CustomizationState>()(
       // Use our custom storage functions that match the required signature
       storage: {
         getItem: (name) => {
-          const value = getLocalStorage(name);
-          return value ? value : null;
+          try {
+            const value = getLocalStorage(name);
+            return value ?? null;
+          } catch {
+            return null;
+          }
         },
         setItem: (name, value) => {
-          setLocalStorage(name, value);
+          try {
+            setLocalStorage(name, value);
+          } catch (error) {
+            console.error('Failed to save to storage:', error);
+          }
         },
         removeItem: (name) => {
-          localStorage.removeItem(name);
+          try {
+            localStorage.removeItem(name);
+          } catch (error) {
+            console.error('Failed to remove from storage:', error);
+          }
         },
       },
     }
