@@ -274,17 +274,32 @@ export default function PreGameLobby() {
   // Leave the game
   const leaveGame = async () => {
     try {
-      await apiRequest('DELETE', `/api/games/${gameId}/players/${userId}`);
-      
+      // First mark that we're intentionally disconnecting to avoid socket reconnection attempts
       if (socket) {
+        console.log('PreGameLobby: Closing socket connection before leaving game');
+        // Force disconnect and prevent automatic reconnection attempts
         socket.disconnect();
+        // Clear the socket reference
+        setSocket(null);
       }
       
+      // Then remove the player from the game on the server
+      await apiRequest('DELETE', `/api/games/${gameId}/players/${userId}`);
+      
       toast.success('Left the game');
-      navigate('/lobby');
+      
+      // Use a short timeout to ensure disconnect completes before navigation
+      setTimeout(() => {
+        navigate('/lobby');
+      }, 300);
     } catch (error) {
       console.error('Error leaving game:', error);
       toast.error('Failed to leave the game');
+      
+      // Even if there's an error, try to navigate back to lobby
+      setTimeout(() => {
+        navigate('/lobby');
+      }, 1000);
     }
   };
   

@@ -30,20 +30,32 @@ export function useGameSocket({ gameId, userId }: UseGameSocketProps): UseGameSo
   
   // Initialize socket connection
   useEffect(() => {
+    console.log(`GameView: Initializing game socket with gameId: ${gameId}, userId: ${userId}`);
+    
+    // First ensure any existing connections are closed
+    if (socket) {
+      console.log('GameView: Closing existing socket connection');
+      socket.disconnect();
+    }
+    
+    // Create a new socket with a unique namespace to avoid conflicts with PreGameLobby
     const newSocket = io('/', {
       query: {
         gameId,
-        userId
+        userId,
+        context: 'game-view' // Add context to distinguish from pre-game socket
       }
     });
     
+    console.log('GameView: New socket connection created');
     setSocket(newSocket);
     
     // Cleanup on unmount
     return () => {
+      console.log('GameView: Cleaning up socket connection on unmount');
       newSocket.disconnect();
     };
-  }, [gameId, userId]);
+  }, [gameId, userId, socket]);
   
   // Set up socket event listeners
   useEffect(() => {

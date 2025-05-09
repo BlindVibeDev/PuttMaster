@@ -11,7 +11,7 @@ export function setupSocketServer(httpServer: HTTPServer): void {
   
   // Socket middleware to authenticate users
   io.use(async (socket, next) => {
-    const { gameId, userId } = socket.handshake.query;
+    const { gameId, userId, context } = socket.handshake.query;
     
     if (!gameId || !userId) {
       log('Socket connection attempt missing game ID or user ID');
@@ -20,6 +20,7 @@ export function setupSocketServer(httpServer: HTTPServer): void {
     
     const userIdNum = Number(userId);
     const gameIdNum = Number(gameId);
+    const connectionContext = context as string || 'pregame'; // Default to pregame if not specified
     
     if (isNaN(userIdNum) || isNaN(gameIdNum)) {
       log(`Invalid ID format: userId=${userId}, gameId=${gameId}`);
@@ -27,7 +28,7 @@ export function setupSocketServer(httpServer: HTTPServer): void {
     }
     
     try {
-      log(`Socket auth: User ${userIdNum} connecting to game ${gameIdNum}`);
+      log(`Socket auth: User ${userIdNum} connecting to game ${gameIdNum} (context: ${connectionContext})`);
       
       // Validate that this is a real user and game
       const player = await getPlayerById(userIdNum);
