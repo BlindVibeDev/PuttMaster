@@ -4,7 +4,8 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, useEffect } from 'react';
+import { toast } from 'sonner';
 
 // Import the wallet adapter styles
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -20,8 +21,24 @@ export function SolanaProvider({ children }: SolanaProviderProps) {
   // Define the RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   
-  // Configure supported wallets
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  // Configure supported wallets with error handling
+  const wallets = useMemo(() => {
+    try {
+      return [new PhantomWalletAdapter()];
+    } catch (error) {
+      console.error('Error creating wallet adapters:', error);
+      return [];
+    }
+  }, []);
+
+  useEffect(() => {
+    // Check if Phantom is installed
+    const isPhantomInstalled = window.phantom?.solana?.isPhantom;
+    
+    if (!isPhantomInstalled) {
+      console.log('Phantom wallet is not installed');
+    }
+  }, []);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
