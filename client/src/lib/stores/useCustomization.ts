@@ -113,10 +113,10 @@ export const useCustomization = create<CustomizationState>()(
       storage: {
         getItem: (name) => {
           const value = getLocalStorage(name);
-          return value ? JSON.stringify(value) : null;
+          return value ? value : null;
         },
         setItem: (name, value) => {
-          setLocalStorage(name, JSON.parse(value));
+          setLocalStorage(name, value);
         },
         removeItem: (name) => {
           localStorage.removeItem(name);
