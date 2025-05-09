@@ -93,6 +93,24 @@ export default function MainMenu() {
             <div className="flex flex-col gap-4">
               {/* Auth Status Section */}
               <div className="flex flex-col gap-4 items-center mb-4">
+                {/* Replit Auth Button */}
+                {user ? (
+                  <div className="w-full p-2 bg-gray-100 rounded-md text-center">
+                    <span className="text-sm font-medium">
+                      Signed in as: <span className="font-bold">{user.username || user.name}</span>
+                    </span>
+                  </div>
+                ) : (
+                  <Button 
+                    onClick={handleReplitLogin} 
+                    className="w-full py-4 text-lg bg-blue-600 hover:bg-blue-700"
+                    disabled={loading}
+                  >
+                    {loading ? 'Loading...' : 'Sign in with Replit'}
+                  </Button>
+                )}
+
+                {/* Wallet Button */}
                 <WalletButton className="w-full py-4 text-lg" />
 
                 {connected && (
