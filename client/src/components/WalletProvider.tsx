@@ -21,28 +21,39 @@ export function SolanaProvider({ children }: SolanaProviderProps) {
   // Define the RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
   
+  // Check if Phantom is installed before creating the adapter
+  const isPhantomInstalled = useMemo(() => {
+    const installed = window.phantom?.solana?.isPhantom || false;
+    if (!installed) {
+      console.log('Phantom wallet is not installed');
+    }
+    return installed;
+  }, []);
+  
   // Configure supported wallets with error handling
   const wallets = useMemo(() => {
     try {
-      return [new PhantomWalletAdapter()];
+      // Only create the adapter if Phantom is installed
+      return isPhantomInstalled ? [new PhantomWalletAdapter()] : [];
     } catch (error) {
       console.error('Error creating wallet adapters:', error);
       return [];
     }
-  }, []);
+  }, [isPhantomInstalled]);
 
+  // Display a notification if Phantom is not installed
   useEffect(() => {
-    // Check if Phantom is installed
-    const isPhantomInstalled = window.phantom?.solana?.isPhantom;
-    
     if (!isPhantomInstalled) {
-      console.log('Phantom wallet is not installed');
+      toast.info(
+        'Phantom wallet is not installed. Some features will be limited.',
+        { id: 'phantom-missing', duration: 5000 }
+      );
     }
-  }, []);
+  }, [isPhantomInstalled]);
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
+      <WalletProvider wallets={wallets} autoConnect={isPhantomInstalled}>
         <WalletModalProvider>
           {children}
         </WalletModalProvider>

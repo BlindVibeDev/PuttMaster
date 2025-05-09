@@ -33,13 +33,29 @@ function App() {
     bgMusic.loop = true;
     bgMusic.volume = 0.3;
 
+    // Game sounds
     const hitSound = new Audio('/sounds/hit.mp3');
     const successSound = new Audio('/sounds/success.mp3');
+    const swingSound = new Audio('/sounds/swing.mp3');
+    const waterSound = new Audio('/sounds/water.mp3');
+    const bounceSound = new Audio('/sounds/bounce.mp3');
 
     // Add to the store
-    useAudio.getState().setBackgroundMusic(bgMusic);
-    useAudio.getState().setHitSound(hitSound);
-    useAudio.getState().setSuccessSound(successSound);
+    const { 
+      setBackgroundMusic,
+      setHitSound,
+      setSuccessSound,
+      setSwingSound,
+      setWaterSound,
+      setBounceSound
+    } = useAudio.getState();
+
+    setBackgroundMusic(bgMusic);
+    setHitSound(hitSound);
+    setSuccessSound(successSound);
+    setSwingSound(swingSound);
+    setWaterSound(waterSound);
+    setBounceSound(bounceSound);
 
     setIsLoading(false);
 
@@ -48,6 +64,9 @@ function App() {
       bgMusic.pause();
       hitSound.pause();
       successSound.pause();
+      swingSound.pause();
+      waterSound.pause();
+      bounceSound.pause();
     };
   }, []);
 
