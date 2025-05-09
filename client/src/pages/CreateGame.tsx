@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
 import { useLobby } from '@/lib/stores/useLobby';
+import { useAuth } from '@/components/AuthContext';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,8 @@ import { AlertCircle } from 'lucide-react';
 
 export default function CreateGame() {
   const navigate = useNavigate();
-  const { userId, username } = useLobby();
+  const { userId, username, isLoggedIn } = useLobby();
+  const { user } = useAuth();
   
   const [gameName, setGameName] = useState(`${username || 'Player'}'s Game`);
   const [gameMode, setGameMode] = useState<GameMode>('solo');
@@ -28,12 +30,34 @@ export default function CreateGame() {
   
   // Check if user is authenticated on mount
   useEffect(() => {
-    if (!userId) {
-      setValidationError('You must be logged in to create a game');
+    console.log('CreateGame component - Auth check:', { 
+      userId, 
+      username, 
+      isLoggedIn,
+      userFromAuth: user ? 'present' : 'not present'
+    });
+    
+    if (!userId || !isLoggedIn) {
+      // If we have user from Auth context but not in lobby store
+      if (user && user.id) {
+        // We're logged in according to Auth context, but not in Lobby
+        console.log('User is logged in via Auth context but not in Lobby state, updating...');
+        // This should trigger a re-render that will update local state
+      } else {
+        setValidationError('You must be logged in to create a game');
+      }
     } else {
       setAuthChecked(true);
+      setValidationError(null);
     }
-  }, [userId]);
+  }, [userId, username, isLoggedIn, user]);
+  
+  // Update game name when username changes
+  useEffect(() => {
+    if (username) {
+      setGameName(`${username}'s Game`);
+    }
+  }, [username]);
   
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,6 +97,8 @@ export default function CreateGame() {
         setValidationError('Invalid user ID format');
         throw new Error('Invalid user ID format');
       }
+      
+      console.log('Creating game with user ID:', userIdAsNumber);
       
       // Make the API request to create the game
       const response = await apiRequest('POST', '/api/games', {

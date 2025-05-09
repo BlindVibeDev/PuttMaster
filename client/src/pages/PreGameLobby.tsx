@@ -15,6 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { InfoIcon } from 'lucide-react';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import { GameMode, GameStatus } from '@shared/schema';
+import { useAudio } from '@/lib/stores/useAudio';
 
 interface Player {
   id: number;
@@ -45,6 +46,9 @@ export default function PreGameLobby() {
   const { userId: userIdString, username } = useLobby();
   const userId = userIdString ? parseInt(userIdString, 10) : 0;
   const { ballType, clubType } = useCustomization();
+  
+  // Get audio from store
+  const { playJoin, playLeave, playReady } = useAudio();
   
   const [gameDetails, setGameDetails] = useState<GameDetails | null>(null);
   const [isReady, setIsReady] = useState(false);
@@ -98,32 +102,84 @@ export default function PreGameLobby() {
     // Handle game state updates
     newSocket.on('pregame:update', (updatedGame: GameDetails) => {
       console.log('Game updated:', updatedGame);
-      setGameDetails(updatedGame);
-      
-      // Check if the current player's ready status changed
-      const currentPlayer = updatedGame.players.find(p => p.userId === userId);
-      if (currentPlayer) {
-        setIsReady(currentPlayer.ready);
-        setSelectedTeam(currentPlayer.team);
-      }
-      
-      // Check if any players have left or joined
-      if (!isLoading && gameDetails) {
-        const prevPlayerCount = gameDetails.players.length;
+      setGameDetails((prevGameDetails) => {
+        // Check if this is the first update
+        if (!prevGameDetails) {
+          setGameDetails(updatedGame);
+          return updatedGame;
+        }
+        
+        // Check if the current player's ready status changed
+        const currentPlayer = updatedGame.players.find(p => p.userId === userId);
+        if (currentPlayer) {
+          setIsReady(currentPlayer.ready);
+          setSelectedTeam(currentPlayer.team);
+        }
+        
+        // Check if any players have left or joined
+        const prevPlayerCount = prevGameDetails.players.length;
+        const prevPlayerIds = prevGameDetails.players.map(p => p.userId);
+        const currentPlayerIds = updatedGame.players.map(p => p.userId);
+        
+        // New players joined
         if (updatedGame.players.length > prevPlayerCount) {
-          toast.info('A new player has joined the game');
-        } else if (updatedGame.players.length < prevPlayerCount) {
-          toast.info('A player has left the game');
+          // Find which player(s) joined
+          const newPlayers = updatedGame.players.filter(p => !prevPlayerIds.includes(p.userId));
+          
+          if (newPlayers.length > 0) {
+            const newPlayerNames = newPlayers.map(p => p.username).join(', ');
+            toast.info(`${newPlayerNames} joined the game`);
+            
+            // Play join sound if available
+            try {
+              playJoin();
+            } catch (error) {
+              console.error('Failed to play join sound', error);
+            }
+          }
+        } 
+        // Players left
+        else if (updatedGame.players.length < prevPlayerCount) {
+          // Find which player(s) left
+          const leftPlayers = prevGameDetails.players.filter(p => !currentPlayerIds.includes(p.userId));
+          
+          if (leftPlayers.length > 0) {
+            const leftPlayerNames = leftPlayers.map(p => p.username).join(', ');
+            toast.info(`${leftPlayerNames} left the game`);
+            
+            // Play leave sound if available
+            try {
+              playLeave();
+            } catch (error) {
+              console.error('Failed to play leave sound', error);
+            }
+          }
           
           // If the host left, we need to navigate back to the lobby
-          if (gameDetails.hostId !== updatedGame.hostId) {
+          if (prevGameDetails.hostId !== updatedGame.hostId) {
             toast.error('The host has left the game. Returning to lobby...');
             setTimeout(() => {
               navigate('/lobby');
             }, 3000);
           }
         }
-      }
+        
+        // Check for players' ready state changes
+        const prevReadyCount = prevGameDetails.players.filter(p => p.ready).length;
+        const currentReadyCount = updatedGame.players.filter(p => p.ready).length;
+        
+        // If a player just got ready
+        if (currentReadyCount > prevReadyCount && updatedGame.players.length === prevGameDetails.players.length) {
+          // Play ready sound if available
+          try {
+            playReady();
+          } catch (error) {
+            console.error('Failed to play ready sound', error);
+          }
+        }
+        
+        return updatedGame;
+      });
     });
     
     // Handle game starting
@@ -153,7 +209,7 @@ export default function PreGameLobby() {
       console.log('Disconnecting socket');
       newSocket.disconnect();
     };
-  }, [gameId, userId, navigate, gameDetails, isLoading]);
+  }, [gameId, userId, navigate, playJoin, playLeave, playReady]);
   
   // Fetch initial game data
   useEffect(() => {

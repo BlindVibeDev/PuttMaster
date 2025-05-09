@@ -1,6 +1,7 @@
 
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useLobby } from '@/lib/stores/useLobby';
 
 export interface ReplitAuthUser {
   id: string;
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<ReplitAuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { setUser: setLobbyUser } = useLobby();
 
   // Check if user is already authenticated
   useEffect(() => {
@@ -37,7 +39,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await fetch('/api/auth/user');
         if (response.ok) {
           const userData = await response.json();
-          setUser(userData);
+          
+          if (userData) {
+            console.log('User authenticated:', userData);
+            setUser(userData);
+            
+            // Also update the lobby store with user data
+            setLobbyUser(userData.id, userData.username);
+          } else {
+            console.log('No user authenticated');
+          }
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
@@ -47,7 +58,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     checkAuth();
-  }, []);
+  }, [setLobbyUser]);
+
+  // Update lobby user info when authenticated user changes
+  useEffect(() => {
+    if (user && user.id) {
+      // Sync user data with lobby store
+      setLobbyUser(user.id, user.username);
+    }
+  }, [user, setLobbyUser]);
 
   // Login function
   const login = () => {
@@ -80,6 +99,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       if (response.ok) {
         setUser(null);
+        // Clear user data from lobby store
+        setLobbyUser('', '');
         toast.success('Logged out successfully');
       } else {
         toast.error('Failed to log out');
