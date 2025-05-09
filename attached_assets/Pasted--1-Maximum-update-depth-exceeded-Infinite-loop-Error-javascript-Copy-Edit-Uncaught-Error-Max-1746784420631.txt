@@ -1,0 +1,88 @@
+🔥 1. Maximum update depth exceeded (Infinite loop)
+Error:
+
+javascript
+Copy
+Edit
+Uncaught Error: Maximum update depth exceeded...
+Likely Cause:
+You are calling setState or updating a store inside useEffect, useMemo, or useLayoutEffect without a proper dependency array, or inside render logic indirectly.
+
+Fix:
+Check <GameViewContent> component (line 67 of GameView.tsx) and trace any useEffect or useSnapshot from Zustand or other state libs. Look for:
+
+tsx
+Copy
+Edit
+useEffect(() => {
+  someState.set(...)  // or any setter function
+}, [someState])  // <-- if this causes the setter to trigger the effect again
+To avoid recursion, ensure:
+
+You cache values from stores using useMemo or useRef.
+
+You don’t directly modify state during render.
+
+Zustand useStore or similar should not trigger another update unconditionally.
+
+⚠️ 2. getSnapshot should be cached to avoid infinite loops
+Error:
+
+vbnet
+Copy
+Edit
+Warning: The result of getSnapshot should be cached to avoid an infinite loop
+Cause:
+You're likely using useSyncExternalStore (or a library that uses it like Zustand), and returning a new reference every time.
+
+Fix:
+Update the getSnapshot function to return a stable value:
+
+tsx
+Copy
+Edit
+const getSnapshot = () => store.getState().value  // not: { ...store.getState() }
+❌ 3. Buffer not accessible in browser (Vite warning)
+sql
+Copy
+Edit
+Module "buffer" has been externalized...
+Cause:
+You're trying to use Node.js-specific modules like buffer in the browser.
+
+Fix:
+Avoid buffer in client-side code or polyfill it (not recommended unless needed). If a library you’re using needs it, check Vite docs on browser compatibility:
+Vite Externalized Modules Docs
+
+⚠️ 4. Phantom Wallet Adapter warning
+csharp
+Copy
+Edit
+Phantom was registered as a Standard Wallet...
+Info:
+Phantom is now included in the standard wallet list, so you can remove the Phantom-specific adapter if you're using @solana/wallet-adapter.
+
+Fix:
+Just remove this line if present:
+
+tsx
+Copy
+Edit
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
+And don't include it in your wallet array.
+
+⚠️ 5. React Router v7 transition warnings
+Copy
+Edit
+⚠️ React Router Future Flag Warning...
+Fix (Optional):
+If you're preparing for React Router v7, enable these flags:
+
+tsx
+Copy
+Edit
+<RouterProvider
+  router={router}
+  future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+/>
+Let me know if you want help debugging the specific loop in <GameViewContent> or se
