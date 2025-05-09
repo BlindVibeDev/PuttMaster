@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupSocketServer } from "./socket";
+import { log } from "./vite";
 import { z } from "zod";
 import { 
   insertGameSessionSchema, 
@@ -267,15 +268,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If user doesn't exist in our system yet, create a new record
       if (!dbUser) {
         try {
-          log(`Creating new user in database for Replit Auth user ${user.id} (${user.name})`);
+          console.log(`Creating new user in database for Replit Auth user ${user.id} (${user.name})`);
           // Use the Replit username for our database
           dbUser = await storage.createUser({
-            username: user.name,
+            username: user.name ? user.name : `User-${user.id.slice(0, 8)}`,
             password: 'none' // Not using passwords with Replit Auth
           });
-          log(`Created new user record: ${JSON.stringify(dbUser)}`);
+          console.log(`Created new user record: ${JSON.stringify(dbUser)}`);
         } catch (err) {
-          log(`Error creating user record for Replit Auth user: ${err}`);
+          console.error(`Error creating user record for Replit Auth user:`, err);
           // Continue anyway - we'll still return the Replit Auth user info
         }
       }
@@ -293,6 +294,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error getting authenticated user:', error);
       return res.status(200).json(null); // Return null instead of error to simplify client logic
+    }
+  });
+  
+  // Endpoint for wallet authentication
+  app.post('/api/auth/wallet', async (req, res) => {
+    try {
+      const { walletAddress } = req.body;
+      
+      if (!walletAddress) {
+        return res.status(400).json({ message: 'Wallet address is required' });
+      }
+      
+      // Check if user exists in our database
+      let dbUser = await storage.getUserByUsername(walletAddress);
+      
+      // If user doesn't exist in our system yet, create a new record
+      if (!dbUser) {
+        try {
+          console.log(`Creating new user for wallet: ${walletAddress}`);
+          // Use a shortened wallet address as username
+          const shortAddr = walletAddress.slice(0, 8);
+          dbUser = await storage.createUser({
+            username: `Wallet-${shortAddr}`,
+            password: 'none' // Not using passwords for wallet auth
+          });
+          console.log(`Created new wallet user: ${JSON.stringify(dbUser)}`);
+        } catch (err) {
+          console.error(`Error creating wallet user:`, err);
+          return res.status(500).json({ message: 'Failed to create user' });
+        }
+      }
+      
+      // Return user info
+      return res.status(200).json({
+        id: walletAddress,
+        name: `Player-${walletAddress.slice(0, 8)}`,
+        username: `Player-${walletAddress.slice(0, 8)}`,
+        bio: 'Wallet User',
+        isLoggedIn: true,
+        roles: [],
+        profileImage: ''
+      });
+    } catch (error) {
+      console.error('Error with wallet authentication:', error);
+      res.status(500).json({ message: 'Authentication failed' });
     }
   });
   
