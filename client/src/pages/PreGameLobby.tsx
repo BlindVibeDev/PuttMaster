@@ -36,9 +36,11 @@ interface GameDetails {
 }
 
 export default function PreGameLobby() {
-  const { id: gameId } = useParams<{ id: string }>();
+  const { id: gameIdString } = useParams<{ id: string }>();
+  const gameId = gameIdString ? parseInt(gameIdString, 10) : 0;
   const navigate = useNavigate();
-  const { userId, username } = useLobby();
+  const { userId: userIdString, username } = useLobby();
+  const userId = userIdString ? parseInt(userIdString, 10) : 0;
   const { ballType, clubType } = useCustomization();
   
   const [gameDetails, setGameDetails] = useState<GameDetails | null>(null);
@@ -51,6 +53,19 @@ export default function PreGameLobby() {
   
   // Connect to socket
   useEffect(() => {
+    // Ensure we have a valid user ID before connecting
+    if (!userId) {
+      setError('User ID not found. Please try logging in again.');
+      return;
+    }
+    
+    if (isNaN(userId)) {
+      setError('Invalid user ID format. Please try logging in again.');
+      return;
+    }
+    
+    console.log(`Connecting to socket with gameId: ${gameId}, userId: ${userId}`);
+    
     const newSocket = io('/', {
       query: {
         gameId,
@@ -60,15 +75,20 @@ export default function PreGameLobby() {
     
     setSocket(newSocket);
     
+    // Handle successful connection
     newSocket.on('connect', () => {
       console.log('Socket connected to pre-game lobby');
+      toast.success('Connected to game lobby');
     });
     
+    // Handle connection errors
     newSocket.on('connect_error', (err) => {
       console.error('Socket connection error:', err);
       setError(`Connection error: ${err.message}`);
+      toast.error(`Connection error: ${err.message}`);
     });
     
+    // Handle game state updates
     newSocket.on('pregame:update', (updatedGame: GameDetails) => {
       console.log('Game updated:', updatedGame);
       setGameDetails(updatedGame);
@@ -77,9 +97,29 @@ export default function PreGameLobby() {
       const currentPlayer = updatedGame.players.find(p => p.userId === userId);
       if (currentPlayer) {
         setIsReady(currentPlayer.ready);
+        setSelectedTeam(currentPlayer.team);
+      }
+      
+      // Check if any players have left or joined
+      if (!isLoading && gameDetails) {
+        const prevPlayerCount = gameDetails.players.length;
+        if (updatedGame.players.length > prevPlayerCount) {
+          toast.info('A new player has joined the game');
+        } else if (updatedGame.players.length < prevPlayerCount) {
+          toast.info('A player has left the game');
+          
+          // If the host left, we need to navigate back to the lobby
+          if (gameDetails.hostId !== updatedGame.hostId) {
+            toast.error('The host has left the game. Returning to lobby...');
+            setTimeout(() => {
+              navigate('/lobby');
+            }, 3000);
+          }
+        }
       }
     });
     
+    // Handle game starting
     newSocket.on('game:starting', () => {
       toast.success('All players ready! Starting game...');
       setTimeout(() => {
@@ -87,11 +127,26 @@ export default function PreGameLobby() {
       }, 2000);
     });
     
+    // Handle errors from server
+    newSocket.on('error', (message) => {
+      console.error('Server error:', message);
+      toast.error(message);
+    });
+    
+    // Handle game cancellations
+    newSocket.on('game:cancelled', (reason) => {
+      toast.error(`Game cancelled: ${reason}`);
+      setTimeout(() => {
+        navigate('/lobby');
+      }, 3000);
+    });
+    
     // Clean up on unmount
     return () => {
+      console.log('Disconnecting socket');
       newSocket.disconnect();
     };
-  }, [gameId, userId, navigate]);
+  }, [gameId, userId, navigate, gameDetails, isLoading]);
   
   // Fetch initial game data
   useEffect(() => {
@@ -200,7 +255,7 @@ export default function PreGameLobby() {
   
   // Is the current user the host?
   const isHost = (): boolean => {
-    if (!gameDetails) return false;
+    if (!gameDetails || !userId) return false;
     return gameDetails.hostId === userId;
   };
   
@@ -333,7 +388,9 @@ export default function PreGameLobby() {
                                     {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                     {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                                   </div>
-                                  <Badge variant={player.ready ? "success" : "outline"}>{player.ready ? "Ready" : "Not Ready"}</Badge>
+                                  <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
+                                    {player.ready ? "Ready" : "Not Ready"}
+                                  </Badge>
                                 </li>
                               ))}
                             </ul>
@@ -358,7 +415,9 @@ export default function PreGameLobby() {
                                     {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                     {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                                   </div>
-                                  <Badge variant={player.ready ? "success" : "outline"}>{player.ready ? "Ready" : "Not Ready"}</Badge>
+                                  <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
+                                    {player.ready ? "Ready" : "Not Ready"}
+                                  </Badge>
                                 </li>
                               ))}
                             </ul>
@@ -379,7 +438,9 @@ export default function PreGameLobby() {
                                 {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                 {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                               </div>
-                              <Badge variant={player.ready ? "success" : "outline"}>{player.ready ? "Ready" : "Not Ready"}</Badge>
+                              <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
+                                {player.ready ? "Ready" : "Not Ready"}
+                              </Badge>
                             </li>
                           ))}
                         </ul>
@@ -423,10 +484,10 @@ export default function PreGameLobby() {
                       <p className="text-sm">Every player for themselves in a three-way battle. Lowest combined score after 9 holes wins.</p>
                     )}
                     {gameDetails.mode === '4player' && (
-                      <p className="text-sm">Four player free-for-all. Compete to get the lowest score across all 9 holes.</p>
+                      <p className="text-sm">Four players compete in a free-for-all match. Lowest score wins.</p>
                     )}
                     {gameDetails.mode === '2v2' && (
-                      <p className="text-sm">Teams of two players. Your team's score is the sum of both players. Lowest team score wins.</p>
+                      <p className="text-sm">Teams of two players compete. Team members alternate holes and the team with the lowest combined score wins.</p>
                     )}
                   </div>
                 </>

@@ -18,6 +18,9 @@ export default function Lobby() {
   const [isLoading, setIsLoading] = useState(true);
   const { userId, username } = useLobby();
   
+  // State for host usernames
+  const [hostUsernames, setHostUsernames] = useState<Record<number, string>>({});
+
   // Fetch active games on mount
   useEffect(() => {
     const fetchGames = async () => {
@@ -25,6 +28,32 @@ export default function Lobby() {
         const response = await apiRequest('GET', '/api/games');
         const data = await response.json();
         setActiveGames(data);
+        
+        // Fetch host usernames for all games
+        const hostIds = data.map((game: GameSession) => game.hostId);
+        // Create an array with unique host IDs
+        const uniqueHostIds = Array.from(new Set(hostIds));
+        
+        // Create an object to store hostId -> username mappings
+        const hostnameMap: Record<number, string> = {};
+        
+        // Try to fetch usernames for each host ID
+        uniqueHostIds.forEach(hostId => {
+          try {
+            // Convert hostId to number to ensure it can be used as an index
+            const hostIdNum = Number(hostId);
+            if (!isNaN(hostIdNum)) {
+              // Ideally, we would have an endpoint to get user details by ID
+              // For now, we can use a placeholder until we implement user lookup
+              hostnameMap[hostIdNum] = `Host ${hostIdNum}`;
+            }
+          } catch (err) {
+            console.error(`Error fetching username for host ${hostId}:`, err);
+            // Skip this host ID if it's invalid
+          }
+        });
+        
+        setHostUsernames(hostnameMap);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching games:', error);
@@ -202,7 +231,7 @@ export default function Lobby() {
                                 </Button>
                               </div>
                               <div className="mt-2 text-sm text-muted-foreground">
-                                Hosted by: Player {game.hostId}
+                                Hosted by: {hostUsernames[game.hostId] || `Player ${game.hostId}`}
                               </div>
                             </div>
                           ))}
@@ -246,7 +275,7 @@ export default function Lobby() {
                                 </Button>
                               </div>
                               <div className="mt-2 text-sm text-muted-foreground">
-                                Hosted by: Player {game.hostId}
+                                Hosted by: {hostUsernames[game.hostId] || `Player ${game.hostId}`}
                               </div>
                             </div>
                           ))}
@@ -294,7 +323,7 @@ export default function Lobby() {
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button variant="outline" onClick={() => navigate('/')}>Back to Menu</Button>
-              <Button onClick={() => navigate('/profile')}>Edit Profile</Button>
+              <Button onClick={() => navigate('/customize')}>Edit Profile</Button>
             </CardFooter>
           </Card>
         </div>

@@ -215,19 +215,37 @@ export function setupSocketServer(httpServer: HTTPServer): void {
       log(`User ${username} (ID: ${userId}) disconnected from game ${gameId}`);
       
       try {
+        // Get the game to check if it's the host who disconnected
+        const game = gameManager.getGame(gameId);
+        const isHost = game && game.hostId === userId;
+        
         // Temporarily mark the player as disconnected
         await gameManager.playerDisconnected(gameId, userId);
         
-        // If all players disconnect, the game will be cleaned up after a timeout
-        setTimeout(async () => {
-          const anyConnected = await gameManager.anyPlayersConnected(gameId);
+        // If the host disconnected from a game that's still in the waiting status, 
+        // notify all players and delete the game immediately
+        if (isHost && game && game.status === 'waiting') {
+          log(`Host (ID: ${userId}) disconnected from waiting game ${gameId}, cancelling game`);
           
-          if (!anyConnected) {
-            // Clean up the game if no players are connected
-            log(`All players disconnected from game ${gameId}, cleaning up`);
+          // Notify all remaining players
+          io.to(`game:${gameId}`).emit('game:cancelled', 'The host has left the game');
+          
+          // Remove the game after a short delay to ensure clients get the message
+          setTimeout(async () => {
             gameManager.removeGame(gameId);
-          }
-        }, 1000 * 60 * 5); // 5 minutes
+          }, 5000);
+        } else {
+          // For non-host disconnects or games in progress, use the normal timeout
+          setTimeout(async () => {
+            const anyConnected = await gameManager.anyPlayersConnected(gameId);
+            
+            if (!anyConnected) {
+              // Clean up the game if no players are connected
+              log(`All players disconnected from game ${gameId}, cleaning up`);
+              gameManager.removeGame(gameId);
+            }
+          }, 1000 * 60 * 5); // 5 minutes
+        }
       } catch (err) {
         console.error('Error handling player disconnect:', err);
       }
