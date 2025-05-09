@@ -9,7 +9,10 @@ import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ReadyBadge } from '@/components/ui/ready-badge';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { InfoIcon } from 'lucide-react';
 import CustomizationPanel from '@/components/CustomizationPanel';
 import { GameMode, GameStatus } from '@shared/schema';
 
@@ -50,6 +53,7 @@ export default function PreGameLobby() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selectedTeam, setSelectedTeam] = useState(0);
   const [showCustomization, setShowCustomization] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   
   // Connect to socket
   useEffect(() => {
@@ -65,6 +69,7 @@ export default function PreGameLobby() {
     }
     
     console.log(`Connecting to socket with gameId: ${gameId}, userId: ${userId}`);
+    setConnectionStatus('connecting');
     
     const newSocket = io('/', {
       query: {
@@ -78,12 +83,14 @@ export default function PreGameLobby() {
     // Handle successful connection
     newSocket.on('connect', () => {
       console.log('Socket connected to pre-game lobby');
+      setConnectionStatus('connected');
       toast.success('Connected to game lobby');
     });
     
     // Handle connection errors
     newSocket.on('connect_error', (err) => {
       console.error('Socket connection error:', err);
+      setConnectionStatus('error');
       setError(`Connection error: ${err.message}`);
       toast.error(`Connection error: ${err.message}`);
     });
@@ -153,6 +160,12 @@ export default function PreGameLobby() {
     const fetchGameDetails = async () => {
       try {
         const response = await apiRequest('GET', `/api/games/${gameId}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to load game details');
+        }
+        
         const data = await response.json();
         setGameDetails(data);
         
@@ -164,9 +177,9 @@ export default function PreGameLobby() {
         }
         
         setIsLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching game details:', error);
-        setError('Failed to load game details');
+        setError(error.message || 'Failed to load game details');
         setIsLoading(false);
       }
     };
@@ -188,6 +201,7 @@ export default function PreGameLobby() {
         }
       });
       
+      toast.success(`You are now ${!isReady ? 'ready' : 'not ready'}`);
       setIsReady(!isReady);
     } catch (error) {
       console.error('Error toggling ready status:', error);
@@ -219,6 +233,7 @@ export default function PreGameLobby() {
     try {
       socket.emit('player:team', { team });
       setSelectedTeam(team);
+      toast.success(`Switched to Team ${team + 1}`);
     } catch (error) {
       console.error('Error changing team:', error);
       toast.error('Failed to change team');
@@ -347,6 +362,22 @@ export default function PreGameLobby() {
             </CardHeader>
             
             <CardContent className="space-y-6">
+              {connectionStatus === 'connecting' && (
+                <Alert className="bg-blue-50 border-blue-200">
+                  <InfoIcon className="h-4 w-4 text-blue-600" />
+                  <AlertTitle>Connecting</AlertTitle>
+                  <AlertDescription>Establishing connection to the game server...</AlertDescription>
+                </Alert>
+              )}
+              
+              {connectionStatus === 'error' && (
+                <Alert variant="destructive">
+                  <InfoIcon className="h-4 w-4" />
+                  <AlertTitle>Connection Error</AlertTitle>
+                  <AlertDescription>There was an issue connecting to the game server. Please try again.</AlertDescription>
+                </Alert>
+              )}
+            
               {showCustomization ? (
                 <div>
                   <div className="flex justify-between items-center mb-4">
@@ -388,9 +419,7 @@ export default function PreGameLobby() {
                                     {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                     {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                                   </div>
-                                  <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
-                                    {player.ready ? "Ready" : "Not Ready"}
-                                  </Badge>
+                                  <ReadyBadge ready={player.ready} />
                                 </li>
                               ))}
                             </ul>
@@ -415,9 +444,7 @@ export default function PreGameLobby() {
                                     {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                     {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                                   </div>
-                                  <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
-                                    {player.ready ? "Ready" : "Not Ready"}
-                                  </Badge>
+                                  <ReadyBadge ready={player.ready} />
                                 </li>
                               ))}
                             </ul>
@@ -438,9 +465,7 @@ export default function PreGameLobby() {
                                 {player.userId === userId && <span className="text-xs ml-2">(You)</span>}
                                 {player.userId === gameDetails.hostId && <span className="text-xs ml-2">(Host)</span>}
                               </div>
-                              <Badge variant={player.ready ? "default" : "outline"} className={player.ready ? "bg-green-100 text-green-800" : ""}>
-                                {player.ready ? "Ready" : "Not Ready"}
-                              </Badge>
+                              <ReadyBadge ready={player.ready} />
                             </li>
                           ))}
                         </ul>
@@ -468,6 +493,11 @@ export default function PreGameLobby() {
                           Team 2
                         </Button>
                       </div>
+                      {isReady && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          You must unready to change teams
+                        </p>
+                      )}
                     </div>
                   )}
                   
