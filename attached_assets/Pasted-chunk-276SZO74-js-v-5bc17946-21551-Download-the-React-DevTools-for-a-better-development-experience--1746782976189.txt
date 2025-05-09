@@ -1,0 +1,117 @@
+chunk-276SZO74.js?v=5bc17946:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+chunk-NLBVANJV.js?v=5bc17946:1792 Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+get @ chunk-NLBVANJV.js?v=5bc17946:1792
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+useAudio.tsx:320 Loading game audio assets...
+useAudio.tsx:374 Audio assets loaded successfully
+App.tsx:37 All game audio assets loaded successfully
+react-router-dom.js?v=5bc17946:4394 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+warnOnce @ react-router-dom.js?v=5bc17946:4394
+react-router-dom.js?v=5bc17946:4394 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+warnOnce @ react-router-dom.js?v=5bc17946:4394
+useAudio.tsx:320 Loading game audio assets...
+useAudio.tsx:374 Audio assets loaded successfully
+App.tsx:37 All game audio assets loaded successfully
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+CreateGame.tsx:33 CreateGame component - Auth check: Object
+CreateGame.tsx:33 CreateGame component - Auth check: Object
+CreateGame.tsx:101 Creating game with user ID: 41161461
+PreGameLobby.tsx:75 Connecting to socket with gameId: 1, userId: 41161461
+PreGameLobby.tsx:209 Disconnecting socket
+PreGameLobby.tsx:75 Connecting to socket with gameId: 1, userId: 41161461
+PreGameLobby.tsx:89 Socket connected to pre-game lobby
+chunk-D57BZEJP.js?v=5bc17946:18167 Warning: The result of getSnapshot should be cached to avoid an infinite loop
+    at GameViewContent (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/pages/GameView.tsx:67:51)
+    at GameProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/game/contexts/GameContext.tsx:24:32)
+    at GameViewWrapper (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/pages/GameView.tsx:50:22)
+    at AuthCheck (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthCheck.tsx:27:37)
+    at RenderedRoute (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4089:5)
+    at Routes (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4559:5)
+    at Suspense
+    at div
+    at AuthProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthContext.tsx:29:32)
+    at WalletModalProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react-ui.js?v=5bc17946:593:30)
+    at WalletProviderBase (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5521:31)
+    at WalletProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5733:27)
+    at ConnectionProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:2278:29)
+    at SolanaProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/WalletProvider.tsx:26:34)
+    at _a (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-helmet-async.js?v=5bc17946:624:5)
+    at QueryClientProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5bc17946:2805:3)
+    at App (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/App.tsx?v=OvTCr74Gkhf0DEGbea9gC:38:37)
+    at AuthProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthContext.tsx?v=OvTCr74Gkhf0DEGbea9gC:29:32)
+    at WalletModalProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react-ui.js?v=5bc17946:593:30)
+    at WalletProviderBase (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5521:31)
+    at WalletProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5733:27)
+    at ConnectionProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:2278:29)
+    at SolanaProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/WalletProvider.tsx:26:34)
+    at _a (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-helmet-async.js?v=5bc17946:624:5)
+    at QueryClientProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5bc17946:2805:3)
+    at Router (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4502:15)
+    at BrowserRouter (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:5248:5)
+console.error @ chunk-D57BZEJP.js?v=5bc17946:18167
+PreGameLobby.tsx:209 Disconnecting socket
+chunk-276SZO74.js?v=5bc17946:16670 Uncaught Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.
+    at checkForNestedUpdates (chunk-276SZO74.js?v=5bc17946:19659:19)
+    at scheduleUpdateOnFiber (chunk-276SZO74.js?v=5bc17946:18533:11)
+    at forceStoreRerender (chunk-276SZO74.js?v=5bc17946:11999:13)
+    at updateStoreInstance (chunk-276SZO74.js?v=5bc17946:11975:13)
+    at commitHookEffectListMount (chunk-276SZO74.js?v=5bc17946:16915:34)
+    at commitPassiveMountOnFiber (chunk-276SZO74.js?v=5bc17946:18156:19)
+    at commitPassiveMountEffects_complete (chunk-276SZO74.js?v=5bc17946:18129:17)
+    at commitPassiveMountEffects_begin (chunk-276SZO74.js?v=5bc17946:18119:15)
+    at commitPassiveMountEffects (chunk-276SZO74.js?v=5bc17946:18109:11)
+    at flushPassiveEffectsImpl (chunk-276SZO74.js?v=5bc17946:19490:11)
+chunk-D57BZEJP.js?v=5bc17946:18167 The above error occurred in the <GameViewContent> component:
+
+    at GameViewContent (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/pages/GameView.tsx:67:51)
+    at GameProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/game/contexts/GameContext.tsx:24:32)
+    at GameViewWrapper (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/pages/GameView.tsx:50:22)
+    at AuthCheck (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthCheck.tsx:27:37)
+    at RenderedRoute (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4089:5)
+    at Routes (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4559:5)
+    at Suspense
+    at div
+    at AuthProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthContext.tsx:29:32)
+    at WalletModalProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react-ui.js?v=5bc17946:593:30)
+    at WalletProviderBase (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5521:31)
+    at WalletProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5733:27)
+    at ConnectionProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:2278:29)
+    at SolanaProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/WalletProvider.tsx:26:34)
+    at _a (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-helmet-async.js?v=5bc17946:624:5)
+    at QueryClientProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5bc17946:2805:3)
+    at App (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/App.tsx?v=OvTCr74Gkhf0DEGbea9gC:38:37)
+    at AuthProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/AuthContext.tsx?v=OvTCr74Gkhf0DEGbea9gC:29:32)
+    at WalletModalProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@solana_wallet-adapter-react-ui.js?v=5bc17946:593:30)
+    at WalletProviderBase (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5521:31)
+    at WalletProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:5733:27)
+    at ConnectionProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-5LC6LEKB.js?v=5bc17946:2278:29)
+    at SolanaProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/src/components/WalletProvider.tsx:26:34)
+    at _a (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-helmet-async.js?v=5bc17946:624:5)
+    at QueryClientProvider (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=5bc17946:2805:3)
+    at Router (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:4502:15)
+    at BrowserRouter (https://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=5bc17946:5248:5)
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+console.error @ chunk-D57BZEJP.js?v=5bc17946:18167
+chunk-276SZO74.js?v=5bc17946:9129 Uncaught Error: Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops.
+    at checkForNestedUpdates (chunk-276SZO74.js?v=5bc17946:19659:19)
+    at scheduleUpdateOnFiber (chunk-276SZO74.js?v=5bc17946:18533:11)
+    at forceStoreRerender (chunk-276SZO74.js?v=5bc17946:11999:13)
+    at updateStoreInstance (chunk-276SZO74.js?v=5bc17946:11975:13)
+    at commitHookEffectListMount (chunk-276SZO74.js?v=5bc17946:16915:34)
+    at commitPassiveMountOnFiber (chunk-276SZO74.js?v=5bc17946:18156:19)
+    at commitPassiveMountEffects_complete (chunk-276SZO74.js?v=5bc17946:18129:17)
+    at commitPassiveMountEffects_begin (chunk-276SZO74.js?v=5bc17946:18119:15)
+    at commitPassiveMountEffects (chunk-276SZO74.js?v=5bc17946:18109:11)
+    at flushPassiveEffectsImpl (chunk-276SZO74.js?v=5bc17946:19490:11)
