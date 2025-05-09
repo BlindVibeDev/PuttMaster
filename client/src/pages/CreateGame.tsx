@@ -31,12 +31,26 @@ export default function CreateGame() {
       return;
     }
     
+    // Ensure we have a valid user ID
+    if (!userId) {
+      toast.error('User ID not found. Please try logging in again.');
+      return;
+    }
+    
     setIsCreating(true);
     
     try {
+      // Ensure the userId is sent as a number
+      const userIdAsNumber = parseInt(userId, 10);
+      
+      // Validate that we have a valid number
+      if (isNaN(userIdAsNumber)) {
+        throw new Error('Invalid user ID format');
+      }
+      
       const response = await apiRequest('POST', '/api/games', {
         name: gameName,
-        hostId: userId,
+        hostId: userIdAsNumber,
         mode: gameMode,
         courseStyle: parseInt(courseStyle)
       });
@@ -47,7 +61,7 @@ export default function CreateGame() {
       navigate(`/pregame/${data.id}`);
     } catch (error) {
       console.error('Error creating game:', error);
-      toast.error('Failed to create game');
+      toast.error('Failed to create game. Please try again.');
       setIsCreating(false);
     }
   };

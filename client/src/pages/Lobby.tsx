@@ -51,21 +51,40 @@ export default function Lobby() {
     try {
       setIsLoading(true);
       
+      // Ensure we have a valid user ID
+      if (!userId) {
+        toast.error('User ID not found. Please try logging in again.');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Convert userId to number
+      const userIdAsNumber = parseInt(userId, 10);
+      
+      // Validate that we have a valid number
+      if (isNaN(userIdAsNumber)) {
+        toast.error('Invalid user ID format. Please try logging in again.');
+        setIsLoading(false);
+        return;
+      }
+      
       const response = await apiRequest('POST', `/api/games/${gameId}/join`, {
-        userId
+        userId: userIdAsNumber
       });
       
-      const data = await response.json();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to join game');
+      }
       
-      setIsLoading(false);
+      await response.json();
+      toast.success('Joined game successfully!');
       
       // Navigate to the pre-game lobby
       navigate(`/pregame/${gameId}`);
-      
-      toast.success('Joined game successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error joining game:', error);
-      toast.error('Failed to join game');
+      toast.error(error.message || 'Failed to join game');
       setIsLoading(false);
     }
   };
