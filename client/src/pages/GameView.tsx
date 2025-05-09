@@ -37,7 +37,7 @@ const keyMap = [
 // Provide a wrapper component that handles the game context
 function GameViewWrapper() {
   const { userId } = useLobby();
-  
+
   return (
     <GameProvider userId={userId}>
       <GameViewContent />
@@ -49,7 +49,7 @@ function GameViewWrapper() {
 function GameViewContent() {
   const { gameId, loading, error, isConnected } = useGameContext();
   const navigate = useNavigate();
-  
+
   // Get values from game state
   const { 
     players, 
@@ -68,7 +68,7 @@ function GameViewContent() {
     myPlayerId: state.myPlayerId,
     ball_positions: state.ball_positions
   }));
-  
+
   // Start background music
   useEffect(() => {
     const { backgroundMusic, isMuted } = useAudio.getState();
@@ -77,21 +77,21 @@ function GameViewContent() {
         console.log('Auto-play prevented. User must interact first.', err);
       });
     }
-    
+
     return () => {
       if (backgroundMusic) {
         backgroundMusic.pause();
       }
     };
   }, []);
-  
+
   // Handle errors
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
   }, [error]);
-  
+
   // Show loading state
   if (loading) {
     return (
@@ -100,7 +100,7 @@ function GameViewContent() {
       </div>
     );
   }
-  
+
   // Show error state
   if (error) {
     return (
@@ -115,7 +115,7 @@ function GameViewContent() {
       </div>
     );
   }
-  
+
   // Show connection status
   if (!isConnected) {
     return (
@@ -125,13 +125,13 @@ function GameViewContent() {
       </div>
     );
   }
-  
+
   return (
     <>
       <Helmet>
         <title>Putt-Putt Golf - Hole {currentHole + 1}</title>
       </Helmet>
-      
+
       <KeyboardControls map={keyMap}>
         <div className="w-full h-screen">
           <Canvas shadows camera={{ position: [0, 10, 15], fov: 45 }}>
@@ -145,17 +145,17 @@ function GameViewContent() {
             />
             <Sky sunPosition={[10, 5, 10]} />
             <Stars />
-            
+
             {/* Game elements */}
             <Suspense fallback={null}>
               <Course courseStyle={courseStyle} />
-              
+
               {/* Render all player balls */}
               {players.map(player => {
                 const currentHoleData = holes[currentHole];
                 const initialPosition = ball_positions[player.id] || 
                   (currentHoleData ? currentHoleData.start : [0, 0, 0]);
-                
+
                 return (
                   <Ball 
                     key={`ball-${player.id}`}
@@ -175,13 +175,13 @@ function GameViewContent() {
                   />
                 );
               })}
-              
+
               {/* Only render club for current player */}
               {players.map(player => {
                 if (!player.isCurrentTurn) return null;
-                
+
                 const position = ball_positions[player.id] || [0, 0, 0];
-                
+
                 return (
                   <Club 
                     key={`club-${player.id}`}
@@ -192,12 +192,12 @@ function GameViewContent() {
                   />
                 );
               })}
-              
+
               {/* Debug controls */}
               <OrbitControls />
             </Suspense>
           </Canvas>
-          
+
           {/* UI elements */}
           <PlayerControls />
           <GameUI gameId={gameId} />
