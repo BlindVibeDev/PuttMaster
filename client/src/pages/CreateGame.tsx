@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { apiRequest } from '@/lib/queryClient';
@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { GameMode } from '@shared/schema';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 export default function CreateGame() {
   const navigate = useNavigate();
@@ -21,18 +23,41 @@ export default function CreateGame() {
   const [courseStyle, setCourseStyle] = useState('0');
   
   const [isCreating, setIsCreating] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  
+  // Check if user is authenticated on mount
+  useEffect(() => {
+    if (!userId) {
+      setValidationError('You must be logged in to create a game');
+    } else {
+      setAuthChecked(true);
+    }
+  }, [userId]);
   
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    setValidationError(null); // Reset validation errors
+    
+    // Validate game name
     if (!gameName.trim()) {
+      setValidationError('Please enter a game name');
       toast.error('Please enter a game name');
+      return;
+    }
+    
+    // Validate game name length
+    if (gameName.length > 30) {
+      setValidationError('Game name must be 30 characters or less');
+      toast.error('Game name must be 30 characters or less');
       return;
     }
     
     // Ensure we have a valid user ID
     if (!userId) {
+      setValidationError('User ID not found. Please try logging in again.');
       toast.error('User ID not found. Please try logging in again.');
       return;
     }
@@ -45,23 +70,32 @@ export default function CreateGame() {
       
       // Validate that we have a valid number
       if (isNaN(userIdAsNumber)) {
+        setValidationError('Invalid user ID format');
         throw new Error('Invalid user ID format');
       }
       
+      // Make the API request to create the game
       const response = await apiRequest('POST', '/api/games', {
-        name: gameName,
+        name: gameName.trim(),
         hostId: userIdAsNumber,
         mode: gameMode,
         courseStyle: parseInt(courseStyle)
       });
       
+      // Check if the response was successful
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create game');
+      }
+      
       const data = await response.json();
       
       toast.success('Game created successfully!');
       navigate(`/pregame/${data.id}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating game:', error);
-      toast.error('Failed to create game. Please try again.');
+      setValidationError(error.message || 'Failed to create game. Please try again.');
+      toast.error(error.message || 'Failed to create game. Please try again.');
       setIsCreating(false);
     }
   };
@@ -81,15 +115,35 @@ export default function CreateGame() {
           
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              {/* Display validation errors */}
+              {validationError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>
+                    {validationError}
+                  </AlertDescription>
+                </Alert>
+              )}
+            
               {/* Game Name */}
               <div className="space-y-2">
                 <Label htmlFor="gameName">Game Name</Label>
                 <Input
                   id="gameName"
                   value={gameName}
-                  onChange={e => setGameName(e.target.value)}
+                  onChange={e => {
+                    setGameName(e.target.value);
+                    if (e.target.value.trim() && validationError === 'Please enter a game name') {
+                      setValidationError(null);
+                    }
+                  }}
                   placeholder="Enter a name for your game"
+                  maxLength={30}
                 />
+                <p className="text-xs text-muted-foreground">
+                  {gameName.length}/30 characters
+                </p>
               </div>
               
               {/* Game Mode */}

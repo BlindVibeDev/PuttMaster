@@ -30,27 +30,18 @@ export default function Lobby() {
         setActiveGames(data);
         
         // Fetch host usernames for all games
-        const hostIds = data.map((game: GameSession) => game.hostId);
+        const hostIds: number[] = data.map((game: GameSession) => game.hostId);
         // Create an array with unique host IDs
-        const uniqueHostIds = Array.from(new Set(hostIds));
+        const uniqueHostIds: number[] = Array.from(new Set(hostIds));
         
         // Create an object to store hostId -> username mappings
         const hostnameMap: Record<number, string> = {};
         
         // Try to fetch usernames for each host ID
         uniqueHostIds.forEach(hostId => {
-          try {
-            // Convert hostId to number to ensure it can be used as an index
-            const hostIdNum = Number(hostId);
-            if (!isNaN(hostIdNum)) {
-              // Ideally, we would have an endpoint to get user details by ID
-              // For now, we can use a placeholder until we implement user lookup
-              hostnameMap[hostIdNum] = `Host ${hostIdNum}`;
-            }
-          } catch (err) {
-            console.error(`Error fetching username for host ${hostId}:`, err);
-            // Skip this host ID if it's invalid
-          }
+          // Ideally, we would have an endpoint to get user details by ID
+          // For now, we can use a placeholder until we implement user lookup
+          hostnameMap[hostId] = `Host ${hostId}`;
         });
         
         setHostUsernames(hostnameMap);

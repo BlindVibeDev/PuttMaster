@@ -97,30 +97,88 @@ export function setupSocketServer(httpServer: HTTPServer): void {
     });
     
     socket.on('game:start', async () => {
-      log(`Starting game ${gameId}`);
+      log(`Request to start game ${gameId} from user ${userId} (${username})`);
       
       try {
+        // Get the game object
+        const game = gameManager.getGame(gameId);
+        
+        // Basic validation
+        if (!game) {
+          log(`Game ${gameId} not found when attempting to start`);
+          return socket.emit('error', 'Game not found');
+        }
+        
+        // Ensure only host can start the game
+        if (game.hostId !== userId) {
+          log(`Non-host user ${userId} attempted to start game ${gameId}`);
+          return socket.emit('error', 'Only the host can start the game');
+        }
+        
+        // Ensure the game is in waiting status
+        if (game.status !== 'waiting') {
+          log(`Attempted to start game ${gameId} that is already in ${game.status} state`);
+          return socket.emit('error', `Game is already ${game.status}`);
+        }
+        
+        // Check if we can start based on our game rules
         const canStart = await gameManager.canStartGame(gameId);
         
         if (canStart) {
           // Start the game
+          log(`Starting game ${gameId} - all validation passed`);
           await gameManager.startGame(gameId);
           
           // Notify all players that the game is starting
           io.to(`game:${gameId}`).emit('game:starting');
           
-          // Send initial game state to all players
+          // Send initial game state to all players after a short delay
           const gameState = await gameManager.getGameState(gameId);
           
           setTimeout(() => {
             io.to(`game:${gameId}`).emit('game:state', gameState);
           }, 1000);
         } else {
-          socket.emit('error', 'Cannot start game - not all players are ready');
+          // Provide more specific error message
+          if (game.mode !== 'solo' && game.players.length < 2) {
+            log(`Cannot start game ${gameId} - insufficient players (${game.players.length})`);
+            return socket.emit('error', `Need at least 2 players to start ${game.mode} mode`);
+          }
+          
+          // Check if there are any not-ready players
+          const notReadyPlayers = game.players.filter(p => !p.ready);
+          if (notReadyPlayers.length > 0) {
+            // Special case: if only the host is not ready, auto-ready them
+            if (notReadyPlayers.length === 1 && notReadyPlayers[0].userId === userId) {
+              log(`Auto-readying host for game ${gameId}`);
+              await gameManager.setPlayerReady(gameId, userId, true);
+              
+              // Try starting the game again now that host is ready
+              const canStartNow = await gameManager.canStartGame(gameId);
+              if (canStartNow) {
+                log(`Starting game ${gameId} after auto-readying host`);
+                await gameManager.startGame(gameId);
+                io.to(`game:${gameId}`).emit('game:starting');
+                
+                const updatedGameState = await gameManager.getGameState(gameId);
+                setTimeout(() => {
+                  io.to(`game:${gameId}`).emit('game:state', updatedGameState);
+                }, 1000);
+                return;
+              }
+            }
+            
+            // Standard case: tell them who's not ready
+            log(`Cannot start game ${gameId} - players not ready: ${notReadyPlayers.map(p => p.userId).join(', ')}`);
+            return socket.emit('error', 'Cannot start game - not all players are ready');
+          }
+          
+          // Generic fallback error
+          socket.emit('error', 'Cannot start game - requirements not met');
         }
       } catch (err) {
         console.error('Error starting game:', err);
-        socket.emit('error', 'Failed to start game');
+        socket.emit('error', 'Failed to start game due to a server error');
       }
     });
     
