@@ -1,28 +1,30 @@
 
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { Button } from './ui/button';
 
 export function WalletButton({ className = '' }) {
-  const { wallet, connect, disconnect, connected, select } = useWallet();
+  const { wallet, disconnect, connected, publicKey } = useWallet();
+  const { setVisible } = useWalletModal();
 
-  if (!wallet) {
+  if (!connected) {
     return (
       <Button 
-        onClick={() => select('phantom')}
+        onClick={() => setVisible(true)}
         className={`${className} bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600`}
       >
-        Connect Phantom Wallet
+        Connect Wallet
       </Button>
     );
   }
 
   return (
     <Button 
-      onClick={connected ? disconnect : connect}
+      onClick={disconnect}
       className={className}
-      variant={connected ? "outline" : "default"}
+      variant="outline"
     >
-      {connected ? 'Disconnect Wallet' : 'Connect Phantom Wallet'}
+      {publicKey?.toString().slice(0, 4)}...{publicKey?.toString().slice(-4)}
     </Button>
   );
 }
