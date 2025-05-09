@@ -93,14 +93,12 @@ export default function MainMenu() {
           <CardContent className="pt-6">
             <div className="flex flex-col gap-4">
               {/* Auth Status Section */}
-              <div className="flex flex-col gap-2 items-center mb-4">
-                <WalletButton />
+              <div className="flex flex-col gap-4 items-center mb-4">
+                <WalletButton className="w-full py-4 text-lg" />
                 
-                
-                
-                {user && (
+                {connected && (
                   <p className="text-sm text-muted-foreground">
-                    Signed in as {user.name}
+                    Wallet Connected: {publicKey?.toString().slice(0, 8)}...
                   </p>
                 )}
               </div>
@@ -113,7 +111,7 @@ export default function MainMenu() {
                 <Button 
                   onClick={handlePlay} 
                   className="w-full py-6 text-xl font-bold"
-                  disabled={!connected || !user}
+                  disabled={!connected}
                 >
                   Play Now
                 </Button>

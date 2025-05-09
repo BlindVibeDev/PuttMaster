@@ -2,7 +2,7 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Button } from './ui/button';
 
-export function WalletButton() {
+export function WalletButton({ className = '' }) {
   const { wallet, connect, disconnect, connected } = useWallet();
 
   if (!wallet) {
@@ -10,8 +10,12 @@ export function WalletButton() {
   }
 
   return (
-    <Button onClick={connected ? disconnect : connect}>
-      {connected ? 'Disconnect' : 'Connect Wallet'}
+    <Button 
+      onClick={connected ? disconnect : connect}
+      className={className}
+      variant={connected ? "outline" : "default"}
+    >
+      {connected ? 'Disconnect Wallet' : 'Connect Phantom Wallet'}
     </Button>
   );
 }
