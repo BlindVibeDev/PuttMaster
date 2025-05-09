@@ -60,6 +60,14 @@ export class MemStorage implements IStorage {
   
   // User operations
   async getUser(id: number): Promise<User | undefined> {
+    // If the ID is a Replit ID (string converted to number), we need to search
+    // by comparing user.id from Replit Auth to our stored IDs
+    for (const [storedId, user] of this.users.entries()) {
+      // For Replit Auth users, their ID might not match internal ID due to auto-increment
+      if (user.username === `User-${id}` || storedId === id) {
+        return user;
+      }
+    }
     return this.users.get(id);
   }
   

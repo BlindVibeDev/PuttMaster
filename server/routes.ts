@@ -259,19 +259,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(200).json(null);
       }
       
-      // Check if user exists in our database
+      // Check if user already exists in our database by ID first - most reliable
       const userId = parseInt(user.id);
-      
-      // Try to get the user record
       let dbUser = await storage.getUser(userId);
+      
+      // If not found by ID but we have a username, try that as fallback
+      if (!dbUser && user.name) {
+        dbUser = await storage.getUserByUsername(user.name);
+      }
       
       // If user doesn't exist in our system yet, create a new record
       if (!dbUser) {
         try {
           console.log(`Creating new user in database for Replit Auth user ${user.id} (${user.name})`);
-          // Use the Replit username for our database
+          
+          // Handle potential undefined username
+          const username = user.name ? user.name : `User-${user.id.slice(0, 8)}`;
+          
+          // Create new user
           dbUser = await storage.createUser({
-            username: user.name ? user.name : `User-${user.id.slice(0, 8)}`,
+            username,
             password: 'none' // Not using passwords with Replit Auth
           });
           console.log(`Created new user record: ${JSON.stringify(dbUser)}`);
@@ -284,8 +291,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Return user info
       return res.status(200).json({
         id: user.id,
-        name: user.name,
-        username: user.name, // Replit auth provides 'name' which we'll use as username
+        name: user.name || '',
+        username: user.name || '', // Replit auth provides 'name' which we'll use as username
         bio: '',
         isLoggedIn: true,
         roles: [],
@@ -306,8 +313,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Wallet address is required' });
       }
       
-      // Check if user exists in our database
+      // Check if user exists in our database by wallet address as username
       let dbUser = await storage.getUserByUsername(walletAddress);
+      
+      // Also check for the shortened wallet username format
+      if (!dbUser) {
+        const shortAddr = walletAddress.slice(0, 8);
+        dbUser = await storage.getUserByUsername(`Wallet-${shortAddr}`);
+      }
       
       // If user doesn't exist in our system yet, create a new record
       if (!dbUser) {

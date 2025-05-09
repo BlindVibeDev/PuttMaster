@@ -42,9 +42,9 @@ export default function AuthCheck({ children }: AuthCheckProps) {
           
           const userData = await response.json();
           
-          // Set the user in the lobby store
+          // Set the user in the lobby store with the wallet method
           const { setUser } = useLobby.getState();
-          setUser(userData.id, userData.username);
+          setUser(userData.id, userData.username, 'wallet');
           
           toast.success('Authenticated via Solana wallet');
           console.log('Authenticated with wallet:', userData);
@@ -59,6 +59,18 @@ export default function AuthCheck({ children }: AuthCheckProps) {
     
     authenticateWithWallet();
   }, [connected, publicKey, isLoggedIn]);
+  
+  // Handle wallet disconnection
+  useEffect(() => {
+    // If wallet was previously connected but is now disconnected
+    const { authMethod, logout } = useLobby.getState();
+    
+    if (authMethod === 'wallet' && !connected && !loading) {
+      // User disconnected their wallet, log them out
+      logout();
+      toast.info('Wallet disconnected');
+    }
+  }, [connected, loading]);
 
   // Either loading from Auth context or wallet is connecting
   if (loading) {
