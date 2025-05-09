@@ -1,6 +1,5 @@
 
 import { createContext, useContext, ReactNode } from 'react';
-import { useWallet } from '@solana/wallet-adapter-react';
 
 interface AuthContextType {
   user: any;
@@ -10,18 +9,16 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  loading: true,
+  loading: false,
   login: () => {}
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const { connected, connecting, publicKey } = useWallet();
-
   return (
     <AuthContext.Provider value={{ 
-      user: connected ? { connected: true, id: publicKey?.toString() } : null,
-      loading: connecting,
-      login: () => {} // Wallet button handles connection now
+      user: null,
+      loading: false,
+      login: () => {}
     }}>
       {children}
     </AuthContext.Provider>
