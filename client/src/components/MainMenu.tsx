@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -21,9 +20,9 @@ export default function MainMenu() {
   const [showNameDialog, setShowNameDialog] = useState(false);
   const [newUsername, setNewUsername] = useState(username);
   const [showCredits, setShowCredits] = useState(false);
-  const { connected, publicKey } = useWallet();
+  const { publicKey, connected } = useWallet();
   const { user, loading } = useAuth();
-  
+
   // Start background music
   useEffect(() => {
     const { backgroundMusic, isMuted } = useAudio.getState();
@@ -32,14 +31,14 @@ export default function MainMenu() {
         console.log('Auto-play prevented. User must interact first.', err);
       });
     }
-    
+
     return () => {
       if (backgroundMusic) {
         backgroundMusic.pause();
       }
     };
   }, []);
-  
+
   // Handle play button click
   const handlePlay = () => {
     if (!connected) {
@@ -52,7 +51,7 @@ export default function MainMenu() {
     }
     navigate('/lobby');
   };
-  
+
   // Handle login with Replit
   const handleReplitLogin = () => {
     // Direct auth with Replit
@@ -60,13 +59,13 @@ export default function MainMenu() {
     const redirectUrl = window.location.origin; // Redirect back to our app root
     window.location.href = `https://replit.com/auth_with_repl_site?domain=${replHost}&redirect=${encodeURIComponent(redirectUrl)}`;
   };
-  
+
   return (
     <>
       <Helmet>
         <title>Putt-Putt Multiplayer Golf</title>
       </Helmet>
-      
+
       <div 
         className="min-h-screen bg-gradient-to-b from-green-800 to-green-600 flex flex-col justify-center items-center p-4"
         style={{
@@ -88,14 +87,14 @@ export default function MainMenu() {
             Multiplayer Miniature Golf Challenge
           </p>
         </motion.div>
-        
+
         <Card className="w-full max-w-md bg-white/90 backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col gap-4">
               {/* Auth Status Section */}
               <div className="flex flex-col gap-4 items-center mb-4">
                 <WalletButton className="w-full py-4 text-lg" />
-                
+
                 {connected && (
                   <p className="text-sm text-muted-foreground">
                     Wallet Connected: {publicKey?.toString().slice(0, 8)}...
@@ -116,7 +115,7 @@ export default function MainMenu() {
                   Play Now
                 </Button>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -131,7 +130,7 @@ export default function MainMenu() {
                   Change Username
                 </Button>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -146,7 +145,7 @@ export default function MainMenu() {
                   Customize
                 </Button>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -160,7 +159,7 @@ export default function MainMenu() {
                   Credits
                 </Button>
               </motion.div>
-              
+
               {/* Sound toggle button */}
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
@@ -184,7 +183,7 @@ export default function MainMenu() {
             </div>
           </CardContent>
         </Card>
-        
+
         {/* Username change dialog */}
         <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
           <DialogContent>
@@ -219,7 +218,7 @@ export default function MainMenu() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        
+
         {/* Credits dialog */}
         <Dialog open={showCredits} onOpenChange={setShowCredits}>
           <DialogContent>
@@ -231,7 +230,7 @@ export default function MainMenu() {
                 <h3 className="font-semibold mb-1">Developed By</h3>
                 <p className="text-sm">Putt-Putt Multiplayer Team</p>
               </div>
-              
+
               <div>
                 <h3 className="font-semibold mb-1">Technologies Used</h3>
                 <ul className="text-sm list-disc pl-5">
@@ -243,7 +242,7 @@ export default function MainMenu() {
                   <li>Solana Web3.js</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-semibold mb-1">Special Thanks</h3>
                 <p className="text-sm">To all miniature golf enthusiasts!</p>
