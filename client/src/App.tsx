@@ -19,7 +19,7 @@ import NotFound from '@/pages/not-found';
 import { SolanaProvider } from '@/components/WalletProvider';
 import AuthCheck from './components/AuthCheck';
 
-// Audio setup
+// Audio setup 
 import { useAudio } from '@/lib/stores/useAudio';
 
 function App() {
@@ -28,45 +28,54 @@ function App() {
 
   // Initialize audio
   useEffect(() => {
-    // Background music setup
-    const bgMusic = new Audio('/sounds/background.mp3');
-    bgMusic.loop = true;
-    bgMusic.volume = 0.3;
-
-    // Game sounds
-    const hitSound = new Audio('/sounds/hit.mp3');
-    const successSound = new Audio('/sounds/success.mp3');
-    const swingSound = new Audio('/sounds/swing.mp3');
-    const waterSound = new Audio('/sounds/water.mp3');
-    const bounceSound = new Audio('/sounds/bounce.mp3');
-
-    // Add to the store
-    const { 
-      setBackgroundMusic,
-      setHitSound,
-      setSuccessSound,
-      setSwingSound,
-      setWaterSound,
-      setBounceSound
-    } = useAudio.getState();
-
-    setBackgroundMusic(bgMusic);
-    setHitSound(hitSound);
-    setSuccessSound(successSound);
-    setSwingSound(swingSound);
-    setWaterSound(waterSound);
-    setBounceSound(bounceSound);
+    // Use the loadSounds function from useAudio store
+    const { loadSounds } = useAudio.getState();
+    
+    // Load all audio assets
+    try {
+      loadSounds();
+      console.log('All game audio assets loaded successfully');
+    } catch (error) {
+      console.error('Failed to load audio assets:', error);
+    }
 
     setIsLoading(false);
-
+    
     // Cleanup
     return () => {
-      bgMusic.pause();
-      hitSound.pause();
-      successSound.pause();
-      swingSound.pause();
-      waterSound.pause();
-      bounceSound.pause();
+      // Get all audio elements and pause them
+      const { 
+        backgroundMusic, 
+        hitSound, 
+        successSound, 
+        swingSound, 
+        waterSound, 
+        bounceSound,
+        lobbyMusic,
+        clickSound,
+        notificationSound,
+        readySound,
+        joinSound,
+        leaveSound
+      } = useAudio.getState();
+      
+      // Pause all game sounds
+      [
+        backgroundMusic, 
+        hitSound, 
+        successSound, 
+        swingSound, 
+        waterSound, 
+        bounceSound,
+        lobbyMusic,
+        clickSound,
+        notificationSound,
+        readySound,
+        joinSound,
+        leaveSound
+      ].forEach(sound => {
+        if (sound) sound.pause();
+      });
     };
   }, []);
 
