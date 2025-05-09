@@ -14,6 +14,7 @@ import Lobby from '@/pages/Lobby';
 import GameView from '@/pages/GameView';
 import CreateGame from '@/pages/CreateGame';
 import PreGameLobby from '@/pages/PreGameLobby';
+import AuthRedirect from '@/pages/AuthRedirect';
 import NotFound from '@/pages/not-found';
 import { SolanaProvider } from '@/components/WalletProvider';
 import AuthCheck from './components/AuthCheck';
@@ -67,6 +68,7 @@ function App() {
               <Suspense fallback={<div>Loading...</div>}>
                 <Routes>
                   <Route path="/" element={<MainMenu />} />
+                  <Route path="/auth-redirect" element={<AuthRedirect />} />
                   <Route 
                     path="/lobby" 
                     element={

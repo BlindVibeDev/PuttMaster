@@ -22,7 +22,7 @@ export default function AuthCheck({ children }: AuthCheckProps) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
         <h1 className="text-2xl font-bold">Please sign in to continue</h1>
-        <Button onClick={login}>Sign in with Privy</Button>
+        <Button onClick={login} className="bg-blue-600 hover:bg-blue-700">Sign in with Replit</Button>
       </div>
     );
   }

@@ -53,8 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = () => {
     try {
       const replHost = window.location.host;
-      // Make sure we properly encode the URL
-      const returnUrl = encodeURIComponent(window.location.origin);
+      // Make sure we properly encode the URL for the auth-redirect page
+      const returnUrl = encodeURIComponent(`${window.location.origin}/auth-redirect`);
       
       // Log these values for debugging
       console.log('Login redirect parameters:', { replHost, returnUrl });

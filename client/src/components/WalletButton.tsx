@@ -12,6 +12,17 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
   const { wallet, publicKey, connecting, connected, disconnect } = useWallet();
   const { setVisible } = useWalletModal();
   const [walletAddress, setWalletAddress] = useState<string>('');
+  const [phantomInstalled, setPhantomInstalled] = useState<boolean>(true);
+
+  // Check if Phantom wallet is installed
+  useEffect(() => {
+    const isPhantomInstalled = window.phantom?.solana?.isPhantom || false;
+    setPhantomInstalled(isPhantomInstalled);
+    
+    if (!isPhantomInstalled) {
+      console.log('Phantom wallet is not installed');
+    }
+  }, []);
 
   // Update the displayed wallet address when connection changes
   useEffect(() => {
@@ -26,8 +37,19 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
     }
   }, [publicKey]);
 
+  // Open Phantom wallet website if not installed
+  const openPhantomWebsite = () => {
+    window.open('https://phantom.app/', '_blank');
+    toast.info('Please install Phantom wallet to continue');
+  };
+
   // Connect wallet or disconnect if already connected
   const handleWalletAction = () => {
+    if (!phantomInstalled) {
+      openPhantomWebsite();
+      return;
+    }
+    
     if (connected) {
       disconnect().catch(error => {
         console.error('Error disconnecting wallet:', error);
@@ -44,7 +66,9 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
       className={`${className} ${
         connected 
           ? 'bg-green-600 hover:bg-green-700' 
-          : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+          : phantomInstalled 
+            ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+            : 'bg-orange-500 hover:bg-orange-600'
       }`}
       disabled={connecting}
     >
@@ -54,6 +78,8 @@ export function WalletButton({ className = '' }: WalletButtonProps) {
         <span>
           {wallet?.adapter.name}: {walletAddress}
         </span>
+      ) : !phantomInstalled ? (
+        'Install Phantom Wallet'
       ) : (
         'Connect Wallet'
       )}
