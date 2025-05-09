@@ -248,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // === Auth Endpoints ===
 
   // Get current authenticated user
-  app.get('/api/auth/user', (req, res) => {
+  app.get('/api/auth/user', async (req, res) => {
     try {
       // Get authenticated user from Replit Auth
       const user = getUserInfo(req);
@@ -256,6 +256,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If no user is authenticated
       if (!user || !user.id) {
         return res.status(200).json(null);
+      }
+      
+      // Check if user exists in our database
+      const userId = parseInt(user.id);
+      
+      // Try to get the user record
+      let dbUser = await storage.getUser(userId);
+      
+      // If user doesn't exist in our system yet, create a new record
+      if (!dbUser) {
+        try {
+          log(`Creating new user in database for Replit Auth user ${user.id} (${user.name})`);
+          // Use the Replit username for our database
+          dbUser = await storage.createUser({
+            username: user.name,
+            password: 'none' // Not using passwords with Replit Auth
+          });
+          log(`Created new user record: ${JSON.stringify(dbUser)}`);
+        } catch (err) {
+          log(`Error creating user record for Replit Auth user: ${err}`);
+          // Continue anyway - we'll still return the Replit Auth user info
+        }
       }
       
       // Return user info

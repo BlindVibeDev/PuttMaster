@@ -14,24 +14,39 @@ export function setupSocketServer(httpServer: HTTPServer): void {
     const { gameId, userId } = socket.handshake.query;
     
     if (!gameId || !userId) {
+      log('Socket connection attempt missing game ID or user ID');
       return next(new Error('Game ID and User ID are required'));
     }
     
+    const userIdNum = Number(userId);
+    const gameIdNum = Number(gameId);
+    
+    if (isNaN(userIdNum) || isNaN(gameIdNum)) {
+      log(`Invalid ID format: userId=${userId}, gameId=${gameId}`);
+      return next(new Error('Invalid ID format'));
+    }
+    
     try {
+      log(`Socket auth: User ${userIdNum} connecting to game ${gameIdNum}`);
+      
       // Validate that this is a real user and game
-      const player = await getPlayerById(Number(userId));
+      const player = await getPlayerById(userIdNum);
       
       if (!player) {
+        log(`Failed to authenticate user ${userIdNum} - user not found and couldn't be created`);
         return next(new Error('Invalid user'));
       }
       
+      log(`User ${player.username} (ID: ${player.id}) authenticated for game ${gameIdNum}`);
+      
       // Store user and game information on the socket
-      socket.data.userId = Number(userId);
+      socket.data.userId = userIdNum;
       socket.data.username = player.username;
-      socket.data.gameId = Number(gameId);
+      socket.data.gameId = gameIdNum;
       
       next();
     } catch (err) {
+      log(`Authentication error for user ${userIdNum}, game ${gameIdNum}: ${err}`);
       next(new Error('Authentication error'));
     }
   });

@@ -1,0 +1,34 @@
+chunk-276SZO74.js?v=5bc17946:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+chunk-NLBVANJV.js?v=5bc17946:1792 Module "buffer" has been externalized for browser compatibility. Cannot access "buffer.Buffer" in client code. See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+get @ chunk-NLBVANJV.js?v=5bc17946:1792
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+react-router-dom.js?v=5bc17946:4394 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+warnOnce @ react-router-dom.js?v=5bc17946:4394
+react-router-dom.js?v=5bc17946:4394 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+warnOnce @ react-router-dom.js?v=5bc17946:4394
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+chunk-5LC6LEKB.js?v=5bc17946:5454 Phantom was registered as a Standard Wallet. The Wallet Adapter for Phantom can be removed from your app.
+(anonymous) @ chunk-5LC6LEKB.js?v=5bc17946:5454
+MainMenu.tsx:31 Auto-play prevented. User must interact first. NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+MainMenu.tsx:31 Auto-play prevented. User must interact first. NotAllowedError: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+AuthContext.tsx:44 User authenticated: Object
+CreateGame.tsx:33 CreateGame component - Auth check: Object
+CreateGame.tsx:33 CreateGame component - Auth check: Object
+CreateGame.tsx:101 Creating game with user ID: 41161461
+PreGameLobby.tsx:75 Connecting to socket with gameId: 1, userId: 41161461
+PreGameLobby.tsx:209 Disconnecting socket
+PreGameLobby.tsx:75 Connecting to socket with gameId: 1, userId: 41161461
+socket__io-client.js?v=5bc17946:1035 WebSocket connection to 'wss://bf4841ff-0ed3-4989-824f-925cdd95138e-00-2fhh92sz5l7t8.kirk.replit.dev/socket.io/?gameId=1&userId=41161461&EIO=4&transport=websocket&sid=B32-PVCunoBHtRMAAAAB' failed: WebSocket is closed before the connection is established.
+doClose @ socket__io-client.js?v=5bc17946:1035
+chunk-D57BZEJP.js?v=5bc17946:18167 Socket connection error: Error: Invalid user
+    at Socket2.onpacket (socket__io-client.js?v=5bc17946:2625:21)
+    at Emitter.emit (socket__io-client.js?v=5bc17946:354:20)
+    at socket__io-client.js?v=5bc17946:3218:12
+console.error @ chunk-D57BZEJP.js?v=5bc17946:18167

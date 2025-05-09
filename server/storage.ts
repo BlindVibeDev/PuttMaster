@@ -324,5 +324,28 @@ export const storage = new MemStorage();
 
 // Helper function to get player by ID
 export async function getPlayerById(id: number): Promise<User | undefined> {
-  return storage.getUser(id);
+  // First try to get an existing user
+  const existingUser = await storage.getUser(id);
+  
+  if (existingUser) {
+    return existingUser;
+  }
+  
+  // If no user exists with this ID, create a new one
+  // This is useful for Replit Auth users who might not have been 
+  // explicitly added to our database yet
+  try {
+    console.log(`Creating new user for ID: ${id}`);
+    // Use a default username based on the ID
+    const newUser = await storage.createUser({
+      username: `Player-${id}`,
+      password: 'none' // Not using passwords for this demo
+    });
+    
+    console.log(`Created new user: ${JSON.stringify(newUser)}`);
+    return newUser;
+  } catch (error) {
+    console.error(`Error creating user for ID ${id}:`, error);
+    return undefined;
+  }
 }
