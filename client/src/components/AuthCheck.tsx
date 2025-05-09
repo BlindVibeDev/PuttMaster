@@ -22,53 +22,76 @@ export default function AuthCheck({ children }: AuthCheckProps) {
 
   // Handle wallet connection/disconnection
   useEffect(() => {
+    // Skip if we're already logged in or the wallet isn't connected
+    // This prevents unnecessary auth attempts
+    if (isLoggedIn || !connected || !publicKey) {
+      return;
+    }
+    
+    let isMounted = true;
+    
     async function authenticateWithWallet() {
-      if (connected && publicKey && !isLoggedIn) {
-        try {
-          setWalletLoading(true);
-          // Get the wallet public key as a string
-          const walletAddress = publicKey.toString();
-          
-          console.log('Wallet connected:', walletAddress);
-          
-          // Send a request to the server to authenticate with this wallet
-          const response = await apiRequest('POST', '/api/auth/wallet', {
-            walletAddress
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to authenticate with wallet');
-          }
-          
-          const userData = await response.json();
-          
+      try {
+        setWalletLoading(true);
+        
+        // Get the wallet public key as a string
+        const walletAddress = publicKey.toString();
+        
+        console.log('Wallet connected, attempting auth:', walletAddress);
+        
+        // Send a request to the server to authenticate with this wallet
+        const response = await apiRequest('POST', '/api/auth/wallet', {
+          walletAddress
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to authenticate with wallet');
+        }
+        
+        const userData = await response.json();
+        
+        // Only update state if the component is still mounted
+        if (isMounted) {
           // Set the user in the lobby store with the wallet method
           const { setUser } = useLobby.getState();
           setUser(userData.id, userData.username, 'wallet');
           
           toast.success('Authenticated via Solana wallet');
           console.log('Authenticated with wallet:', userData);
-        } catch (error) {
+        }
+      } catch (error) {
+        if (isMounted) {
           console.error('Wallet authentication error:', error);
           toast.error('Failed to authenticate with wallet');
-        } finally {
+        }
+      } finally {
+        if (isMounted) {
           setWalletLoading(false);
         }
       }
     }
     
     authenticateWithWallet();
+    
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
   }, [connected, publicKey, isLoggedIn]);
   
-  // Handle wallet disconnection
+  // Handle wallet disconnection - this effect runs separately
   useEffect(() => {
-    // If wallet was previously connected but is now disconnected
-    const { authMethod, logout } = useLobby.getState();
+    const state = useLobby.getState();
     
-    if (authMethod === 'wallet' && !connected && !loading) {
-      // User disconnected their wallet, log them out
-      logout();
-      toast.info('Wallet disconnected');
+    // Only run the logout if we're using wallet auth and the wallet disconnected
+    if (state.authMethod === 'wallet' && !connected && !loading) {
+      // Use a function reference to avoid capturing outdated state
+      state.logout();
+      
+      // Only show toast for deliberate disconnects, not during loading
+      if (!loading) {
+        toast.info('Wallet disconnected');
+      }
     }
   }, [connected, loading]);
 
