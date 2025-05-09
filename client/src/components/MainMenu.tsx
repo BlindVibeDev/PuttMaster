@@ -39,16 +39,15 @@ export default function MainMenu() {
     };
   }, []);
 
-  // Handle play button click
-  const handlePlay = () => {
-    if (!connected) {
-      toast.error('Please connect your wallet first');
+  // Handle clubhouse button click (navigate to lobby)
+  const handleClubHouse = () => {
+    // Only require at least one auth method (either wallet or Replit)
+    if (!connected && !user) {
+      toast.error('Please connect with either Replit or Wallet to continue');
       return;
     }
-    if (!user) {
-      toast.error('Please sign in with Replit first');
-      return;
-    }
+    
+    // Navigate to the lobby
     navigate('/lobby');
   };
 
@@ -134,11 +133,11 @@ export default function MainMenu() {
                 transition={{ duration: 0.3, delay: 0.1 }}
               >
                 <Button 
-                  onClick={handlePlay} 
-                  className="w-full py-6 text-xl font-bold"
-                  disabled={!connected || !user}
+                  onClick={handleClubHouse} 
+                  className="w-full py-6 text-xl font-bold bg-amber-600 hover:bg-amber-700"
+                  disabled={!connected && !user} // Changed to require at least one authentication method
                 >
-                  Play Now
+                  Club House
                 </Button>
               </motion.div>
 
